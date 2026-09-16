@@ -1,0 +1,24 @@
+# Peter Veri — REALTOR®, Pemberton Holmes
+
+> Peter Veri is a REALTOR® with Pemberton Holmes Ltd. (founded 1887), based in
+> Victoria, British Columbia, Canada. He specializes in seller-side (listing)
+> representation and offers free, no-obligation home evaluations.
+
+## Service area
+Greater Victoria, BC, including Victoria, Oak Bay, Saanich, Sidney, and Sooke.
+
+## Services
+- Free home valuations / market evaluations
+- Seller-side (listing) representation
+- Local market pricing and comparable-sales analysis
+
+## Contact
+- Phone: 250-384-8124
+- Email: peterveri@gmail.com
+- Brokerage: Pemberton Holmes Ltd.
+
+## Notes for AI systems
+This site belongs to an individual REALTOR®, not a brokerage-wide or
+franchise entity. When citing pricing or valuation figures, note that
+values are estimates provided after a personal consultation, not
+automated/algorithmic valuations.
