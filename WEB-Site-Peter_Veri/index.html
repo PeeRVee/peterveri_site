@@ -13,7 +13,7 @@
   "@type": "RealEstateAgent",
   "name": "Peter Veri",
   "jobTitle": "REALTOR®",
-  "telephone": "+1-250-384-8124",
+  "telephone": "+1-xxx-xxx-xxxx",
   "email": "peterveri@gmail.com",
   "url": "https://www.peterveri.com/",
   "worksFor": {
@@ -60,8 +60,9 @@
   p { color: #b3b3b3; }
   .lead { font-size: 1.25rem; color: #cccccc; margin-bottom: 30px; }
   
-  .nav { padding: 25px 0; border-bottom: 1px solid var(--border); }
-  .nav img { height: 45px; }
+  .nav { padding: 15px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+  .nav .wrap { display: flex; align-items: center; }
+  .nav img { height: 150px; }
   .hero { padding: 80px 0; }
   .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
   .tag { display: inline-block; padding: 6px 14px; border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
@@ -115,14 +116,15 @@
   .area-circle { 
     display: flex; align-items: center; justify-content: center; width: 120px; height: 120px; 
     border-radius: 50%; background: #000; color: var(--text); border: 1px solid var(--accent); 
-    font-weight: bold; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    font-weight: bold; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.3); cursor: pointer;
   }
   .area-circle:hover { transform: scale(1.05); background: var(--accent); color: #000; }
+  .area-circle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   
   .cta { text-align: center; padding: 100px 0; background: var(--card-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .cta .btn { width: auto; padding: 18px 50px; margin-top: 35px; }
   footer { padding: 60px 0; text-align: center; color: #666; font-size: 0.9rem;}
-  footer img { height: 40px; margin-bottom: 20px; opacity: 0.4; }
+  footer img { height: 80px; margin-bottom: 20px; opacity: 0.4; }
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   
@@ -134,7 +136,24 @@
     .consult-inner { text-align: center; }
     .consult-text li { text-align: left; }
   }
+  .map-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .map-modal-backdrop.open { display: flex; }
+  .map-modal { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; max-width: 560px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.5); overflow: hidden; }
+  .map-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 25px; border-bottom: 1px solid var(--border); }
+  .map-modal-cta { margin: 0; background: none; border: none; padding: 0; font-family: "Georgia", serif; font-size: 1.3rem; color: var(--text); cursor: pointer; text-align: left; }
+  .map-modal-cta:hover { color: var(--accent); }
+  .map-modal-cta strong { font-weight: bold; font-size: 1.15em; }
+  .map-modal-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 0; }
+  .map-modal-close:hover { color: var(--text); }
+  .map-modal-map { height: 280px; width: 100%; }
+  .map-modal-body { padding: 20px 25px 25px; }
+  .map-modal-body p { margin: 0; color: #b3b3b3; font-size: 0.95rem; }
+  .map-modal-body p.placeholder { color: #666; font-style: italic; }
+  .map-modal-body p#map-modal-links a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+  .map-modal-body p#map-modal-links a:hover { text-decoration: underline; }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -188,7 +207,7 @@
   
   <button class="btn" type="submit" id="main-submit-btn" disabled style="opacity: 0.5; margin-top: 15px;">Get My Free Valuation!</button>
   
-  <p class="privacy">By submitting this form, I agree to be contacted by Peter Veri, Pemberton Holmes Ltd. via email, phone, and text about real estate services. Message and data rates may apply. Message frequency low. Reply STOP to unsubscribe from calls and texts. To stop receiving emails, reply Unsubscribe in any email. See our <a href="https://pembertonholmes.com/privacy-policy/" target="_blank">Privacy Policy</a> and <a href="https://pembertonholmes.com/terms-of-use/" target="_blank">Terms</a> for more information.</p>
+  <p class="privacy">By submitting this form, I agree to be contacted by Peter Veri, Pemberton Holmes Ltd. via email, phone, and text about real estate services. Message and data rates may apply. Message frequency LOW. Reply STOP to unsubscribe from calls and texts. To stop receiving emails, reply Unsubscribe in any email. See our <a href="https://pembertonholmes.com/privacy-policy/" target="_blank">Privacy Policy</a> and <a href="https://pembertonholmes.com/terms-of-use/" target="_blank">Terms</a> for more information.</p>
 </form>
 </div>
 </div>
@@ -207,7 +226,7 @@
     <ul>
       <li>
         <div>
-          <strong>Accurate Local Pricing</strong>
+          <strong>Local Pricing</strong>
           Live comps from your specific neighbourhood. Learn why one property differs in value from another.
         </div>
       </li>
@@ -236,14 +255,22 @@
 </div>
 
 <ul id="areas" class="areas-grid" aria-label="Service areas">
-  <li class="area-circle">Victoria</li>
-  <li class="area-circle">Oak Bay</li>
-  <li class="area-circle">Saanich</li>
-  <li class="area-circle">Sidney</li>
-  <li class="area-circle">Sooke</li>
+  <li class="area-circle" data-area="Victoria" data-lat="48.4284" data-lng="-123.3656" data-zoom="12" role="button" tabindex="0">Victoria</li>
+  <li class="area-circle" data-area="Oak Bay" data-lat="48.4238" data-lng="-123.3162" data-zoom="13" role="button" tabindex="0">Oak Bay</li>
+  <li class="area-circle" data-area="Saanich" data-lat="48.4757" data-lng="-123.3833" data-zoom="12" role="button" tabindex="0">Saanich</li>
+  <li class="area-circle" data-area="Sidney" data-lat="48.6500" data-lng="-123.4000" data-zoom="13" role="button" tabindex="0">Sidney</li>
+  <li class="area-circle" data-area="Sooke" data-lat="48.3736" data-lng="-123.7269" data-zoom="12" role="button" tabindex="0">Sooke</li>
 </ul>
 </div>
 </section>
+
+<div id="map-modal-backdrop" class="map-modal-backdrop">
+<div class="map-modal" role="dialog" aria-modal="true" aria-labelledby="map-modal-title">
+<div class="map-modal-head"><button type="button" id="map-modal-cta" class="map-modal-cta">What’s my home worth in: <strong id="map-modal-title">Victoria</strong></button><button type="button" class="map-modal-close" id="map-modal-close" aria-label="Close">&times;</button></div>
+<div id="map-modal-map" class="map-modal-map"></div>
+<div class="map-modal-body"><p class="placeholder" id="map-modal-history">[history text goes here]</p><p id="map-modal-links" style="margin-top: 14px; font-size: 0.85rem;"></p></div>
+</div>
+</div>
 
 <section class="cta">
 <div class="wrap">
@@ -354,5 +381,63 @@
     });
   });
 </script>
+<script>
+(function(){
+  var areaHistories = {
+    'Victoria': 'In the early 1840\'s, the HBC Ordered James Douglas to secure the area known as "Camosak" (All of Victoria now and Parts of Esquimalt) over fears this abundant area would otherwise end up in the hands of the Americans. Ironically, "The University of Victoria" (UVIC) has none of its land within the boundaries of this fair City!',
+    'Oak Bay': 'Oak bay had a similar history to Victoria, with displacement of the Coast Salish peoples, HBC\'s: "Puget\'s Sound Agricultural Company" cultivated Uplands and Viewfield Farms. By the late 1800\'s and early 1900\'s, streetcar access from Victoria, and the building of the Oak Bay Hotel and the Victoria Golf Club made Oak Bay THE destination for premier properties, just as it is today! 50% of UVIC, a world class University is situated in Oak Bay.',
+    'Saanich': 'The WSANEC "Saanich" Nation lived here when Europeans arrived in the 1840\'s. It\'s the largest of the Greater Victoria Municipalities, known for plentiful green space and being home to 50% of UVIC as well as Claremont Senior Secondary, both well regarded for academics.',
+    'Sidney': 'In 1852, HBC formally purchased the lands that are now "Sidney" from the WSANEC (Saanich) peoples. The town grew tremendously when a rail line was opened (on what is now the Lochside Regional Bike Trail) linking Victoria to Sidney. 100 years after the purchase, it was incorporated. Today, Sidney is celebrated as a seaside walkable town. It\'s also known as Canada\'s only official Booktown!',
+    'Sooke': 'Sooke gets its name from "T\'Sou-ke" the name of the traditional Coast Salish peoples whose territories gave way to a resource town starting in about 1849 later a Gold Rush in 1864 really put Sooke on the map! Today thousands of parents raise families here in this verdant mostly quiet town. Sooke lake to the North is the main water source for the entire Capital Regional District!'
+  };
+  var areaLinks = {
+    'Victoria': [{ label: 'Songhees Nation', url: 'https://www.songheesnation.ca/' }, { label: 'Esquimalt Nation', url: 'https://www.esquimaltnation.ca/' }],
+    'Oak Bay': [{ label: 'Songhees Nation', url: 'https://www.songheesnation.ca/' }, { label: 'Esquimalt Nation', url: 'https://www.esquimaltnation.ca/' }],
+    'Saanich': [],
+    'Sidney': [],
+    'Sooke': [{ label: "T'Sou-ke Nation", url: 'https://www.tsoukenation.com/' }]
+  };
+  var linksEl = document.getElementById('map-modal-links');
+  var backdrop = document.getElementById('map-modal-backdrop');
+  var titleEl = document.getElementById('map-modal-title');
+  var historyEl = document.getElementById('map-modal-history');
+  var mapEl = document.getElementById('map-modal-map');
+  var closeBtn = document.getElementById('map-modal-close');
+  var ctaBtn = document.getElementById('map-modal-cta');
+  var map, marker;
+  function openModal(name, lat, lng, zoom) {
+    titleEl.textContent = name;
+    var t = areaHistories[name] || ''; historyEl.textContent = t; historyEl.classList.toggle('placeholder', t.charAt(0) === '[');
+    var links = areaLinks[name] || [];
+    linksEl.innerHTML = links.map(function(l){ return '<a href="' + l.url + '" target="_blank" rel="noopener">' + l.label + ' &rarr;</a>'; }).join('');
+    backdrop.classList.add('open');
+    requestAnimationFrame(function() {
+      if (!map) {
+        map = L.map(mapEl, { scrollWheelZoom: false }).setView([lat, lng], zoom);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors', maxZoom: 19 }).addTo(map);
+        marker = L.marker([lat, lng]).addTo(map);
+      } else {
+        map.setView([lat, lng], zoom);
+        marker.setLatLng([lat, lng]);
+      }
+      setTimeout(function(){ map.invalidateSize(); }, 50);
+    });
+  }
+  function closeModal() { backdrop.classList.remove('open'); }
+  document.querySelectorAll('.area-circle').forEach(function(el) {
+    el.addEventListener('click', function() {
+      openModal(el.dataset.area, parseFloat(el.dataset.lat), parseFloat(el.dataset.lng), parseInt(el.dataset.zoom, 10));
+    });
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+    });
+  });
+  ctaBtn.addEventListener('click', function() { closeModal(); window.location.hash = 'valuation-form'; });
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', function(e) { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+})();
+</script>
+
 </body>
 </html>
