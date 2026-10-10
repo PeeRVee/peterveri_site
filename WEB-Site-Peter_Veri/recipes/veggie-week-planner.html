@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veggie Week Planner</title>
+<style>
+  :root { --ink:#1f2a24; --muted:#6b756f; --line:#e6e9e7; --green:#2f7a4d; --green-soft:#eef6f1; --red:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { max-width:1100px; margin:0 auto; padding:32px 20px 8px; }
+  h1 { margin:0; font-size:2rem; letter-spacing:-.02em; }
+  h1 span { color:var(--green); }
+  .sub { color:var(--muted); margin:4px 0 0; }
+  nav { max-width:1100px; margin:16px auto 0; padding:0 20px; display:flex; gap:4px; border-bottom:1px solid var(--line); }
+  nav button { background:none; border:0; padding:10px 16px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-1px; }
+  nav button.active { color:var(--green); border-color:var(--green); font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:20px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .btn { font:inherit; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid var(--green); background:var(--green); color:#fff; cursor:pointer; }
+  .btn:hover { filter:brightness(1.08); }
+  .btn.ghost { background:#fff; color:var(--green); }
+  .btn.small { padding:6px 12px; font-size:.875rem; }
+  .btn.fav.on { background:var(--green-soft); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:20px; align-items:start; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .day { font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--green); font-weight:700; }
+  .card h2 { margin:2px 0 6px; font-size:1.25rem; line-height:1.25; }
+  .desc { color:var(--muted); margin:0 0 10px; }
+  .time { display:inline-block; background:var(--green-soft); color:var(--green); border-radius:99px; padding:2px 12px; font-size:.8125rem; font-weight:600; }
+  .card h3 { font-size:.8125rem; text-transform:uppercase; letter-spacing:.08em; margin:16px 0 6px; color:var(--muted); }
+  .card ul, .card ol { margin:0; padding-left:20px; }
+  .card li { margin-bottom:4px; }
+  .actions { display:flex; gap:8px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+  .cat { margin-bottom:24px; }
+  .cat h2 { font-size:1.0625rem; border-bottom:2px solid var(--green-soft); padding-bottom:4px; }
+  .cat ul { list-style:none; padding:0; margin:0; columns:2 280px; }
+  .cat li { padding:3px 0; break-inside:avoid; }
+  .cat label { cursor:pointer; }
+  .cat input:checked + span { text-decoration:line-through; color:var(--muted); }
+  .cat .n { color:var(--muted); font-size:.8125rem; }
+  .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .stores { font-size:.8125rem; color:var(--muted); margin:8px 0 0; }
+  @media (max-width: 480px) {
+    header, main, nav { padding-left:12px; padding-right:12px; }
+    h1 { font-size:1.6rem; }
+    nav button { padding:10px 10px; font-size:.9rem; }
+    .card { padding:16px; }
+    .cat ul { columns:1; }
+  }
+  @media print { nav, .toolbar, .actions { display:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Veggie <span>Week</span> Planner</h1>
+  <p class="sub">Seven quick, low-carb dinners: mostly vegetarian, with 1–2 wild-caught fish nights. Each makes 2 servings: dinner tonight, lunch tomorrow.</p>
+  <p class="stores">Ingredients are chosen to be found at Walmart, Save-On Foods, Thrifty Foods, Fairway Market, H Mart, Costco (Langford) and Saanich farm stands.</p>
+</header>
+<nav id="tabs">
+  <button data-tab="week" class="active">This Week</button>
+  <button data-tab="favs">My Favorites (<span id="favCount">0</span>)</button>
+  <button data-tab="list">Shopping List</button>
+</nav>
+<main>
+  <section id="week">
+    <div class="toolbar">
+      <button class="btn" id="genWeek">Generate Week</button>
+      <button class="btn ghost" id="genList">Generate Shopping List</button>
+    </div>
+    <div class="grid" id="weekGrid"></div>
+  </section>
+  <section id="favs" hidden><div class="grid" id="favGrid"></div></section>
+  <section id="list" hidden>
+    <div class="toolbar"><button class="btn ghost" onclick="window.print()">Print list</button></div>
+    <div id="listBody"></div>
+  </section>
+</main>
+
+<script>
+// ---------- Recipe data ----------
+// I(name, qty, unit, category): quantities are for 2 people. Use the same name+unit
+// for the same ingredient across recipes so the shopping list can merge them.
+const P='Produce', PA='Pantry', D='Dairy & Eggs', PR='Tofu, Beans & Protein', FR='Frozen';
+const I = (name, qty, unit, cat) => ({ name, qty, unit, cat });
+const SP = I('salt & black pepper', null, '', PA);
+
+const RECIPES = [
+ { id:'a1', name:'Spiced Roast Cauliflower with Yogurt-Mint Sauce', time:'10 min prep + 20 min cook',
+   desc:'Crispy, smoky cauliflower roasted on a bed of wilted spinach, with a cool lemony yogurt-mint sauce.',
+   ing:[I('cauliflower',1,'head',P),I('olive oil',2,'tbsp',PA),I('paprika',2,'tsp',PA),I('cumin',1,'tsp',PA),I('baby spinach',100,'g',P),I('Greek yogurt',120,'g',D),I('fresh mint',10,'g',P),I('lemon',1,'',P),SP],
+   steps:['Heat the oven to 425°F (220°C). Cut the cauliflower into bite-sized florets.','Put the florets on a baking sheet with the oil, paprika, cumin, salt and pepper. Mix with your hands.','Roast for 20 minutes, turning once, until golden at the edges.','Meanwhile, chop the mint and stir it into the yogurt with the juice of ½ lemon and a pinch of salt.','Add the spinach to the hot pan for the last 1 minute so it wilts.','Serve the cauliflower and spinach with the sauce and lemon wedges.'] },
+ { id:'a2', name:'Zucchini Ribbons with Tomato, Basil & Mozzarella', time:'10 min prep + 10 min cook',
+   desc:'Zucchini ribbons tossed in garlicky, blistered tomatoes with fresh basil and melty mozzarella. Ready in 20 minutes.',
+   ing:[I('zucchini',3,'',P),I('cherry tomato',250,'g',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('chili flakes',0.5,'tsp',PA),I('mozzarella',125,'g',D),I('fresh basil',15,'g',P),SP],
+   steps:['Use a vegetable peeler to peel the zucchini into long ribbons. Halve the tomatoes and slice the garlic.','Heat the oil in a large skillet on medium-high. Cook the tomatoes and garlic with the chili flakes for 3 minutes, until the tomatoes start to burst.','Add the zucchini and cook for 2 minutes, tossing. Stop while it still has some bite.','Take the pan off the heat. Season with salt and pepper and tear in the mozzarella and basil.'] },
+ { id:'a3', name:'Spinach, Mushroom & Cheddar Omelet with Tomato Salad', time:'5 min prep + 10 min cook',
+   desc:'A fluffy cheese omelet filled with mushrooms and spinach, with a simple tomato and cucumber salad. The easiest dinner on the list.',
+   ing:[I('egg',4,'',D),I('mushroom',150,'g',P),I('baby spinach',80,'g',P),I('cheddar',60,'g',D),I('butter',1,'tbsp',D),I('cherry tomato',100,'g',P),I('cucumber',0.5,'',P),I('olive oil',1,'tbsp',PA),SP],
+   steps:['Slice the mushrooms and grate the cheddar. Halve the tomatoes, chop the cucumber and toss both with the oil, salt and pepper in a bowl.','Melt half the butter in a non-stick skillet on medium-high. Cook the mushrooms for 5 minutes, then add the spinach for 1 minute until wilted. Tip onto a plate.','Beat the eggs with a pinch of salt and pepper. Wipe the pan, melt the remaining butter and pour in the eggs.','Stir gently for 30 seconds, then leave for 1–2 minutes until nearly set. Put the mushrooms, spinach and cheese on one half.','Fold the other half over and slide onto a plate. Serve with the salad. Keep half the filling for tomorrow if you want a second omelet.'] },
+ { id:'a4', name:'Shakshuka with Feta', time:'10 min prep + 20 min cook',
+   desc:'Eggs poached in a smoky pepper and tomato sauce, topped with salty feta. High in protein and made in one pan.',
+   ing:[I('olive oil',1,'tbsp',PA),I('red onion',1,'',P),I('bell pepper',1,'',P),I('garlic',2,'clove',P),I('cumin',1,'tsp',PA),I('paprika',1,'tsp',PA),I('canned chopped tomatoes',400,'g',PA),I('egg',4,'',D),I('feta',80,'g',D),I('fresh parsley',10,'g',P),SP],
+   steps:['Heat the oil in a deep skillet on medium. Cook the sliced onion and pepper for 6 minutes.','Add the crushed garlic, cumin and paprika and stir for 1 minute.','Pour in the tomatoes, add salt and pepper, and simmer for 8 minutes until thicker.','Make 4 dips in the sauce and crack an egg into each. Cover and cook for 5 minutes, until the whites are set.','Crumble the feta on top, add the parsley, and serve from the pan.'] },
+ { id:'a5', name:'Garlic-Soy Tofu & Broccoli Stir-Fry', time:'5 min prep + 15 min cook',
+   desc:'Golden tofu cubes and charred broccoli in a quick garlic, ginger and soy glaze.',
+   ing:[I('extra firm tofu',280,'g',PR),I('broccoli',1,'head',P),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',2,'cm',P),I('soy sauce',3,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',2,'',P),I('sesame seeds',1,'tbsp',PA)],
+   steps:['Pat the tofu dry with paper towel and cut into 2 cm cubes. Cut the broccoli into small florets. Slice the garlic and green onions and grate the ginger.','Heat 1 tbsp oil in a large skillet on high. Cook the tofu for 7–8 minutes, turning now and then, until golden. Move to a plate.','Add the remaining oil, the broccoli and a splash of water. Cook for 4 minutes, stirring, until bright green with a few charred spots.','Add the garlic and ginger for 30 seconds. Pour in the soy sauce and sesame oil, return the tofu, and toss for 1 minute.','Top with green onion and sesame seeds.'] },
+ { id:'a6', note:'Thai chili is optional (H Mart or Save-On Foods). Skip it or use a little sriracha. Shiitake and napa cabbage are at H Mart and Save-On Foods.', name:'Napa Cabbage, Shiitake & Tofu Stir-Fry with Hoisin', time:'10 min prep + 12 min cook',
+   desc:'Tender napa cabbage, meaty shiitake and snow peas with tofu in a savoury hoisin-ginger sauce, with an optional kick of fresh chili.',
+   ing:[I('extra firm tofu',250,'g',PR),I('napa cabbage',300,'g',P),I('shiitake mushroom',150,'g',P),I('snow pea',100,'g',P),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',2,'cm',P),I('hoisin sauce',1,'tbsp',PA),I('soy sauce',2,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('Thai chili',1,'',P),I('green onion',2,'',P)],
+   steps:['Pat the tofu dry and cut into cubes. Slice the napa cabbage and shiitake mushrooms. Mix the hoisin, soy sauce and sesame oil with 2 tbsp water in a small bowl.','Heat 1 tbsp oil in a large skillet on high. Cook the tofu for 6 minutes until golden. Move to a plate.','Add the remaining oil and the shiitake. Cook for 3 minutes. Add the cabbage, snow peas, crushed garlic, grated ginger and thinly sliced chili (leave it out for no heat).','Stir-fry for 3 minutes until the cabbage wilts. Return the tofu, pour in the sauce, and toss for 1 minute.','Top with sliced green onion.'] },
+ { id:'a7', note:'Cauliflower rice is sold frozen or fresh at Costco Langford, Walmart and Save-On Foods. If you can\'t find it, grate a cauliflower head. Bean sprouts: H Mart or Save-On Foods.', name:'Egg-Fried Cauliflower Rice with Edamame', time:'5 min prep + 10 min cook',
+   desc:'A takeout-style fried rice made with cauliflower rice, scrambled egg, edamame and crunchy bean sprouts.',
+   ing:[I('cauliflower rice',300,'g',P),I('egg',3,'',D),I('frozen edamame',120,'g',FR),I('mung bean sprout',100,'g',P),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',1,'cm',P),I('soy sauce',2,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',3,'',P),SP],
+   steps:['Beat the eggs. Slice the green onions. Crush the garlic and grate the ginger.','Heat 1 tbsp oil in a large skillet on medium-high. Pour in the eggs and stir for 1 minute, until just scrambled. Move to a plate.','Add the remaining oil, garlic and ginger and stir for 30 seconds. Add the cauliflower rice and edamame (no need to thaw) and cook for 5 minutes, stirring.','Add the soy sauce, sesame oil, bean sprouts and the eggs. Toss for 1 minute.','Top with green onion. Pack the leftovers for lunch.'] },
+ { id:'a8', note:'Gai lan is at H Mart and sometimes Save-On Foods. Broccolini or regular broccoli works instead.', name:'Five-Spice Tofu with Garlicky Gai Lan', time:'10 min prep + 15 min cook',
+   desc:'Crispy tofu rubbed in warm five-spice, with tender-crisp gai lan (Chinese broccoli) stir-fried in garlic and soy.',
+   ing:[I('extra firm tofu',280,'g',PR),I('five-spice powder',1,'tsp',PA),I('gai lan',300,'g',P),I('vegetable oil',2,'tbsp',PA),I('garlic',3,'clove',P),I('soy sauce',2,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('sesame seeds',1,'tbsp',PA),SP],
+   steps:['Pat the tofu dry and cut into 2 cm cubes. Toss with the five-spice and a pinch of salt. Trim the tough ends from the gai lan and cut into 5 cm lengths.','Heat 1 tbsp oil in a large skillet on high. Cook the tofu for 7–8 minutes, turning, until crisp. Move to a plate.','Add the remaining oil, the gai lan stems and a splash of water. Cook for 3 minutes, then add the leaves and sliced garlic and cook for 2 minutes.','Add the soy sauce and sesame oil and return the tofu. Toss for 1 minute and top with sesame seeds.'] },
+ { id:'a9', name:'Caprese Stuffed Portobello Mushrooms', time:'10 min prep + 20 min cook',
+   desc:'Meaty portobello caps roasted with garlic, filled with sweet tomatoes and melted mozzarella, and served on fresh spinach.',
+   ing:[I('portobello mushroom',4,'',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('cherry tomato',200,'g',P),I('mozzarella',125,'g',D),I('fresh basil',10,'g',P),I('baby spinach',80,'g',P),SP],
+   steps:['Heat the oven to 400°F (200°C). Twist the stems out of the mushrooms and wipe the caps clean.','Mix the oil with the crushed garlic, salt and pepper. Brush it on the caps and put them on a baking sheet with the gills facing up.','Roast for 10 minutes.','Halve the tomatoes and tear the mozzarella. Fill the caps and roast for 8–10 minutes more, until the cheese has melted.','Top with torn basil and serve on the spinach.'] },
+ { id:'a10', name:'Quick Chickpea & Spinach Coconut Curry', time:'10 min prep + 15 min cook',
+   desc:'A creamy tomato-coconut curry with ginger and spinach, made with curry powder. Half a can of chickpeas keeps the carbs modest.',
+   ing:[I('vegetable oil',1,'tbsp',PA),I('red onion',1,'',P),I('garlic',2,'clove',P),I('fresh ginger',2,'cm',P),I('curry powder',2,'tsp',PA),I('canned chickpeas',200,'g',PA),I('canned chopped tomatoes',200,'g',PA),I('coconut milk',150,'ml',PA),I('baby spinach',120,'g',P),I('Greek yogurt',100,'g',D),I('lime',1,'',P),SP],
+   steps:['Heat the oil in a pot on medium. Cook the chopped onion for 5 minutes.','Add the crushed garlic, grated ginger and curry powder and stir for 1 minute.','Add the drained chickpeas, tomatoes and coconut milk. Simmer for 8 minutes, until thicker.','Stir in the spinach for 1–2 minutes until wilted. Add the juice of ½ lime and salt to taste.','Serve topped with the yogurt and lime wedges.'] },
+ { id:'a11', name:'Greek Skillet with Peppers, Chickpeas & Feta', time:'10 min prep + 15 min cook',
+   desc:'Sweet peppers and tomatoes softened with oregano and chickpeas, topped with salty feta. All in one pan.',
+   ing:[I('bell pepper',2,'',P),I('olive oil',2,'tbsp',PA),I('red onion',1,'',P),I('garlic',2,'clove',P),I('canned chickpeas',120,'g',PA),I('cherry tomato',200,'g',P),I('dried oregano',1,'tsp',PA),I('feta',100,'g',D),I('fresh parsley',10,'g',P),I('lemon',1,'',P),SP],
+   steps:['Slice the peppers and onion. Halve the tomatoes.','Heat the oil in a large skillet on medium-high. Cook the peppers and onion for 8 minutes, stirring, until soft and a little browned.','Add the crushed garlic and oregano and stir for 30 seconds.','Add the drained chickpeas and tomatoes. Cook for 4 minutes.','Crumble the feta over the top, add the parsley and a squeeze of lemon, and serve.'] },
+ { id:'a12', note:'Cauliflower rice is sold frozen or fresh at Costco Langford, Walmart and Save-On Foods. If you can\'t find it, grate a cauliflower head.', name:'Cauliflower Rice Burrito Bowls with Lime Yogurt', time:'10 min prep + 15 min cook',
+   desc:'Lime-spiked cauliflower rice with chili-spiced mushrooms and black beans, fresh tomatoes, melty cheddar and cool lime yogurt.',
+   ing:[I('cauliflower rice',300,'g',P),I('olive oil',2,'tbsp',PA),I('mushroom',200,'g',P),I('canned black beans',120,'g',PA),I('cumin',1,'tsp',PA),I('chili powder',1,'tsp',PA),I('cheddar',50,'g',D),I('lime',1,'',P),I('cherry tomato',150,'g',P),I('green onion',2,'',P),I('Greek yogurt',100,'g',D),SP],
+   steps:['Slice the mushrooms. Heat 1 tbsp oil in a skillet on high and cook the mushrooms with the cumin and chili powder for 8 minutes, until browned. Add the drained black beans for the last 2 minutes.','In a second pan, heat the remaining oil and cook the cauliflower rice for 4 minutes. Add salt and the juice of ½ lime.','Grate the cheddar. Mix the yogurt with the juice of the other ½ lime and a pinch of salt. Halve the tomatoes and slice the green onions.','Put the rice in two bowls and add the mushrooms and beans, tomatoes and cheddar.','Top with lime yogurt and green onion. One bowl keeps in the fridge for lunch.'] },
+ { id:'a13', note:'Asparagus is cheapest in season (spring) at Saanich farm stands. Grocery stores carry it all year.', name:'Garlic Butter Asparagus with Fried Eggs', time:'5 min prep + 15 min cook',
+   desc:'Snappy asparagus in garlicky butter with spinach, topped with runny fried eggs and chives.',
+   ing:[I('asparagus',300,'g',P),I('butter',2,'tbsp',D),I('garlic',2,'clove',P),I('egg',4,'',D),I('baby spinach',80,'g',P),I('lemon',1,'',P),I('fresh chives',5,'g',P),SP],
+   steps:['Snap the tough ends off the asparagus.','Melt half the butter in a large skillet on medium-high. Cook the asparagus for 5–6 minutes, turning, until tender. Add the crushed garlic for the last minute.','Add the spinach and stir until wilted. Add the juice of ½ lemon, salt and pepper. Move to two plates.','Melt the remaining butter in the pan and fry the eggs for 3 minutes, until the whites are set.','Put the eggs on the asparagus and top with chopped chives. Serve with lemon wedges.'] },
+ { id:'a14', name:'Sticky Mushroom & Tofu Lettuce Cups', time:'10 min prep + 12 min cook',
+   desc:'Savoury minced mushroom and tofu in a sticky soy-hoisin glaze, spooned into crisp lettuce cups with cucumber.',
+   ing:[I('extra firm tofu',200,'g',PR),I('mushroom',250,'g',P),I('vegetable oil',1,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',1,'cm',P),I('soy sauce',2,'tbsp',PA),I('hoisin sauce',1,'tbsp',PA),I('sriracha',1,'tsp',PA),I('romaine heart',2,'',P),I('cucumber',0.5,'',P),I('green onion',2,'',P),I('sesame seeds',1,'tbsp',PA)],
+   steps:['Chop the mushrooms very small. Crumble the tofu into small pieces with your hands.','Heat the oil in a large skillet on high. Cook the mushrooms for 6 minutes, until the water has gone and they are browning.','Add the tofu and cook for 4 minutes. Add the crushed garlic, grated ginger, soy sauce, hoisin and sriracha and cook for 1–2 minutes, until sticky.','Separate the romaine leaves. Cut the cucumber and green onions into thin sticks.','Spoon the filling into the lettuce leaves and top with cucumber, green onion and sesame seeds.'] },
+ { id:'a15', note:'Brussels sprouts are in season in fall and winter at Saanich farm stands. Grocery stores carry them all year.', name:'Sheet-Pan Brussels Sprouts & Mushrooms with Baked Eggs and Feta', time:'10 min prep + 25 min cook',
+   desc:'Crispy roasted Brussels sprouts and mushrooms with thyme, finished with eggs baked right on the pan and crumbled feta.',
+   ing:[I('Brussels sprouts',300,'g',P),I('mushroom',200,'g',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('dried thyme',1,'tsp',PA),I('egg',4,'',D),I('feta',80,'g',D),SP],
+   steps:['Heat the oven to 425°F (220°C). Trim and halve the Brussels sprouts. Halve the mushrooms.','Put them on a large baking sheet with the oil, crushed garlic, thyme, salt and pepper. Mix and spread out.','Roast for 18 minutes, stirring once.','Make 4 gaps in the vegetables, crack an egg into each, and bake for 6–7 minutes, until the whites are set.','Crumble the feta over the top and serve from the pan.'] },
+ { id:'f1', fish:true, note:'Buy wild-caught salmon (sockeye, coho, pink or chinook labelled wild). Atlantic salmon is farmed, so skip it. Frozen wild sockeye is worth checking at Costco Langford, Save-On Foods or Thrifty Foods.',
+   name:'Sheet-Pan Lemon Butter Wild Salmon with Green Beans', time:'5 min prep + 15 min cook',
+   desc:'Juicy wild salmon fillets and crisp green beans baked together on one tray with garlic, lemon and butter.',
+   ing:[I('wild salmon fillet',2,'',PR),I('green bean',250,'g',P),I('butter',2,'tbsp',D),I('garlic',2,'clove',P),I('lemon',1,'',P),I('olive oil',1,'tbsp',PA),I('fresh parsley',10,'g',P),SP],
+   steps:['Heat the oven to 400°F (200°C). Trim the green beans and put them on a baking sheet with the oil, salt and pepper. Mix.','Move the beans to the sides and put the salmon in the middle, skin side down. Season the fish with salt and pepper.','Melt the butter in a small bowl in the microwave for 20 seconds. Stir in the crushed garlic and the juice of ½ lemon, then spoon it over the fish.','Bake for 12–15 minutes, until the salmon flakes easily when you press it with a fork.','Sprinkle with parsley and serve with the other lemon half in wedges.'] },
+ { id:'f2', fish:true, note:'Buy wild Pacific cod or ling cod. Frozen wild cod fillets are fine and usually cheaper. Check the label at Costco Langford or Save-On Foods.',
+   name:'Pan-Seared Wild Cod with Tomatoes, Spinach & Basil', time:'10 min prep + 15 min cook',
+   desc:'Flaky cod fillets on a quick sauce of blistered tomatoes, garlic and wilted spinach.',
+   ing:[I('wild cod fillet',2,'',PR),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('cherry tomato',200,'g',P),I('baby spinach',100,'g',P),I('lemon',1,'',P),I('fresh basil',10,'g',P),SP],
+   steps:['Pat the cod dry with paper towel and season both sides with salt and pepper. Halve the tomatoes.','Heat 1 tbsp oil in a non-stick skillet on medium-high. Cook the cod for 4 minutes without moving it, then turn and cook for 3 minutes more. Move to a plate.','Add the remaining oil, the tomatoes and the sliced garlic to the same pan. Cook for 3 minutes, until the tomatoes start to burst.','Add the spinach and stir for 1 minute until wilted. Add the juice of ½ lemon.','Spoon the sauce onto plates, put the cod on top and add torn basil.'] },
+ { id:'f3', fish:true, note:'Buy wild Pacific halibut (fresh in season, frozen the rest of the year). Check the price: halibut is the priciest fish here. Cod works as a swap.',
+   name:'Garlic Butter Wild Halibut with Roasted Broccoli', time:'5 min prep + 20 min cook',
+   desc:'Thick, mild halibut pan-fried in garlic butter, served with crisp-edged roasted broccoli and a squeeze of lemon.',
+   ing:[I('wild halibut fillet',2,'',PR),I('broccoli',1,'head',P),I('butter',2,'tbsp',D),I('garlic',2,'clove',P),I('lemon',1,'',P),I('olive oil',1,'tbsp',PA),I('fresh parsley',10,'g',P),SP],
+   steps:['Heat the oven to 425°F (220°C). Cut the broccoli into florets, put them on a baking sheet with the oil, salt and pepper, and mix. Roast for 15 minutes.','Pat the halibut dry and season both sides with salt and pepper.','When the broccoli has 10 minutes left, melt 1 tbsp butter in a skillet on medium-high. Cook the halibut for 4 minutes on one side without moving it.','Turn the fish and add the remaining butter and the crushed garlic. Cook for 3 minutes, spooning the butter over the fish.','Squeeze over the lemon juice and sprinkle with parsley. Serve with the broccoli.'] },
+ { id:'f4', fish:true, note:'Canned wild pink or sockeye salmon is sold at Walmart, Save-On Foods, Thrifty Foods and Costco. Check that the label says wild. Atlantic or "farmed" salmon is not allowed.',
+   name:'Wild Salmon Cakes with Cucumber-Dill Yogurt', time:'10 min prep + 10 min cook',
+   desc:'Crispy pan-fried patties made from canned wild salmon, with no breadcrumbs, and a cool cucumber-dill yogurt. Pantry-friendly and fast.',
+   ing:[I('wild salmon (213 g)',2,'can',PR),I('egg',2,'',D),I('cheddar',40,'g',D),I('green onion',2,'',P),I('fresh dill',10,'g',P),I('vegetable oil',2,'tbsp',PA),I('Greek yogurt',120,'g',D),I('cucumber',0.5,'',P),I('lemon',1,'',P),SP],
+   steps:['Drain the salmon and flake it into a bowl, removing any big bones. Grate in the cheddar and add the eggs, sliced green onion, half the chopped dill, salt and pepper. Mix with a fork.','Shape into 6 small patties and press them firmly together.','Heat the oil in a non-stick skillet on medium. Cook the patties for 4 minutes per side, without moving them, until golden.','Meanwhile, grate the cucumber, squeeze out the water, and mix with the yogurt, the rest of the dill, the juice of ½ lemon and a pinch of salt.','Serve the patties with the sauce and lemon wedges.'] },
+ { id:'f5', fish:true, note:'Buy wild-caught salmon, not Atlantic. Miso paste is sold in the Asian aisle at Save-On Foods and Walmart, and at H Mart.',
+   name:'Miso-Ginger Wild Salmon with Snow Peas', time:'10 min prep + 15 min cook',
+   desc:'Salmon brushed with a sweet-salty miso and ginger glaze, baked until sticky, and served with garlicky snow peas.',
+   ing:[I('wild salmon fillet',2,'',PR),I('miso paste',1,'tbsp',PA),I('soy sauce',1,'tbsp',PA),I('rice vinegar',1,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('fresh ginger',2,'cm',P),I('snow pea',250,'g',P),I('garlic',2,'clove',P),I('vegetable oil',1,'tbsp',PA),I('green onion',2,'',P),I('sesame seeds',1,'tbsp',PA)],
+   steps:['Heat the oven to 400°F (200°C). Line a baking sheet with foil.','Mix the miso, soy sauce, rice vinegar, sesame oil and grated ginger in a small bowl.','Put the salmon on the sheet and brush the glaze over the top. Bake for 12–14 minutes, until it flakes with a fork.','While it bakes, heat the oil in a skillet on high. Cook the snow peas for 3 minutes, add the sliced garlic for 30 seconds, and season.','Serve the salmon on the snow peas, topped with sliced green onion and sesame seeds.'] },
+ { id:'f6', fish:true, note:'Use wild cod or wild halibut. Frozen fillets work: thaw them overnight in the fridge. Costco Langford and Save-On Foods are the likely sources.',
+   name:'Foil-Packet Wild Cod with Zucchini, Tomatoes & Oregano', time:'10 min prep + 15 min cook',
+   desc:'Cod steamed in a foil packet with zucchini, tomatoes, garlic and oregano. There is almost nothing to wash up.',
+   ing:[I('wild cod fillet',2,'',PR),I('zucchini',2,'',P),I('cherry tomato',150,'g',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('dried oregano',1,'tsp',PA),I('lemon',1,'',P),SP],
+   steps:['Heat the oven to 400°F (200°C). Tear off two big sheets of foil. Slice the zucchini into half-moons and halve the tomatoes.','Put half the zucchini, tomatoes and sliced garlic in the centre of each sheet. Add a cod fillet on top of each.','Drizzle with the oil and sprinkle with oregano, salt and pepper. Add a few slices of lemon.','Fold the foil over and crimp the edges to seal. Put the packets on a baking sheet and bake for 15 minutes.','Open the packets carefully (the steam is hot) and squeeze over the rest of the lemon.'] },
+];
+
+// ---------- State ----------
+const safeGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+const safeSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const byId = id => RECIPES.find(r => r.id === id);
+const isFish = id => !!byId(id).fish;
+
+let weekIds = safeGet('vwp.week') || [];
+if (weekIds.length !== 7 || !weekIds.every(byId)) weekIds = [];
+let favIds = (safeGet('vwp.favs') || []).filter(byId);
+let listShown = false;
+
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// ---------- Rendering ----------
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const UNIT_PLURAL = { clove:'cloves', head:'heads', can:'cans' };
+
+function fmtQty(qty) {
+  if (qty == null) return '';
+  const r = Math.round(qty * 10) / 10;
+  if (r === 0.5) return '½';
+  if (r % 1 === 0.5) return Math.floor(r) + '½';
+  return String(r);
+}
+function fmtIng(i) {
+  if (i.qty == null) return i.name;
+  const q = fmtQty(i.qty), many = i.qty > 1;
+  if (i.unit === '') return `${q} ${i.name}${many && !i.name.endsWith('s') ? 's' : ''}`;
+  if (UNIT_PLURAL[i.unit]) return `${q} ${many ? UNIT_PLURAL[i.unit] : i.unit} ${i.name}`;
+  if (i.unit === 'cm') return `${q} cm ${i.name}`;
+  return `${q} ${i.unit} ${i.name}`;
+}
+
+function cardHTML(r, label, idx) {
+  const isFav = favIds.includes(r.id);
+  return `<article class="card">
+    ${label ? `<div class="day">${label}</div>` : ''}
+    <h2>${esc(r.name)}</h2>
+    <p class="desc">${esc(r.desc)}</p>
+    ${r.fish ? '<span class="time" style="margin-right:6px">🐟 Wild-caught fish</span>' : ''}
+    <span class="time">⏱ ${esc(r.time)}</span>
+    <h3>Ingredients (2 servings)</h3>
+    <ul>${r.ing.map(i => `<li>${esc(fmtIng(i))}</li>`).join('')}</ul>
+    <h3>Method</h3>
+    <ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+    ${r.note ? `<p class="note"><strong>Where to find it:</strong> ${esc(r.note)}</p>` : ''}
+    <div class="actions">
+      ${idx != null ? `<button class="btn ghost small" data-regen="${idx}">↻ Regenerate</button>` : ''}
+      <button class="btn ghost small fav ${isFav ? 'on' : ''}" data-fav="${r.id}">${isFav ? '♥ Saved' : '♡ Save to Favorites'}</button>
+    </div>
+  </article>`;
+}
+
+function renderWeek() {
+  const g = document.getElementById('weekGrid');
+  g.innerHTML = weekIds.length
+    ? weekIds.map((id, i) => cardHTML(byId(id), DAYS[i], i)).join('')
+    : '<div class="empty" style="grid-column:1/-1">Click “Generate Week” to plan your seven dinners.</div>';
+}
+function renderFavs() {
+  document.getElementById('favCount').textContent = favIds.length;
+  document.getElementById('favGrid').innerHTML = favIds.length
+    ? favIds.map(id => cardHTML(byId(id), '', null)).join('')
+    : '<div class="empty" style="grid-column:1/-1">No favorites yet. Save a recipe with the ♡ button and it will show up here.</div>';
+}
+
+function buildList() {
+  const merged = {};
+  weekIds.forEach(id => byId(id).ing.forEach(i => {
+    const k = i.name + '|' + i.unit;
+    if (!merged[k]) merged[k] = { ...i, qty: i.qty == null ? null : 0, count: 0 };
+    if (i.qty != null) merged[k].qty += i.qty;
+    merged[k].count++;
+  }));
+  const cats = {};
+  Object.values(merged).forEach(i => (cats[i.cat] = cats[i.cat] || []).push(i));
+  return cats;
+}
+function renderList() {
+  const body = document.getElementById('listBody');
+  if (!listShown || !weekIds.length) {
+    body.innerHTML = '<div class="empty">Generate a week, then click “Generate Shopping List”.</div>';
+    return;
+  }
+  const cats = buildList();
+  body.innerHTML = [P, D, PR, FR, PA].filter(c => cats[c]).map(c => `
+    <div class="cat"><h2>${c}</h2><ul>
+      ${cats[c].sort((a, b) => a.name.localeCompare(b.name)).map(i => `
+        <li><label><input type="checkbox"> <span>${esc(fmtIng(i))}</span>
+        ${i.count > 1 ? `<span class="n">(${i.count} recipes)</span>` : ''}</label></li>`).join('')}
+    </ul></div>`).join('');
+}
+
+function renderAll() { renderWeek(); renderFavs(); renderList(); }
+
+// ---------- Actions ----------
+function showTab(name) {
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  ['week', 'favs', 'list'].forEach(s => document.getElementById(s).hidden = s !== name);
+}
+
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (b) showTab(b.dataset.tab);
+});
+document.getElementById('genWeek').addEventListener('click', () => {
+  const fishN = 1 + Math.floor(Math.random() * 2);   // 1-2 fish nights
+  const fish = shuffle(RECIPES.filter(r => r.fish)).slice(0, fishN);
+  const veg = shuffle(RECIPES.filter(r => !r.fish)).slice(0, 7 - fishN);
+  weekIds = shuffle([...fish, ...veg]).map(r => r.id);
+  safeSet('vwp.week', weekIds);
+  renderAll();
+});
+document.getElementById('genList').addEventListener('click', () => {
+  if (!weekIds.length) { alert('Generate a week first.'); return; }
+  listShown = true; renderList(); showTab('list');
+});
+document.addEventListener('click', e => {
+  const rg = e.target.closest('[data-regen]');
+  if (rg) {
+    const i = +rg.dataset.regen;
+    // keep the week at 1-2 fish nights
+    const fishNow = weekIds.filter(isFish).length - (isFish(weekIds[i]) ? 1 : 0);
+    let pool = RECIPES.filter(r => !weekIds.includes(r.id) && (fishNow === 0 ? r.fish : fishNow >= 2 ? !r.fish : true));
+    if (!pool.length) pool = RECIPES.filter(r => r.id !== weekIds[i]);
+    weekIds[i] = pool[Math.floor(Math.random() * pool.length)].id;
+    safeSet('vwp.week', weekIds);
+    renderAll();
+    return;
+  }
+  const fv = e.target.closest('[data-fav]');
+  if (fv) {
+    const id = fv.dataset.fav;
+    favIds = favIds.includes(id) ? favIds.filter(f => f !== id) : [...favIds, id];
+    safeSet('vwp.favs', favIds);
+    renderAll();
+  }
+});
+
+renderAll();
+</script>
+</body>
+</html>
