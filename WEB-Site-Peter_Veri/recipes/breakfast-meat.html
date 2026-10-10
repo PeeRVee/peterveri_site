@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breakfast with Meat Options</title>
+<meta name="description" content="Eight simple, low-carb breakfasts with bacon, Canadian back bacon, ham and sausage.">
+<style>
+  :root { --ink:#1f2a24; --muted:#6b756f; --line:#e6e9e7; --green:#2f7a4d; --green-soft:#eef6f1; --red:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { max-width:1100px; margin:0 auto; padding:32px 20px 8px; }
+  h1 { margin:0; font-size:2rem; letter-spacing:-.02em; }
+  h1 span { color:var(--green); }
+  .sub { color:var(--muted); margin:4px 0 0; }
+  nav { max-width:1100px; margin:16px auto 0; padding:0 20px; display:flex; gap:4px; border-bottom:1px solid var(--line); }
+  nav button { background:none; border:0; padding:10px 16px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-1px; }
+  nav button.active { color:var(--green); border-color:var(--green); font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:20px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .btn { font:inherit; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid var(--green); background:var(--green); color:#fff; cursor:pointer; }
+  .btn:hover { filter:brightness(1.08); }
+  .btn.ghost { background:#fff; color:var(--green); }
+  .btn.small { padding:6px 12px; font-size:.875rem; }
+  .btn.fav.on { background:var(--green-soft); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:20px; align-items:start; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .day { font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--green); font-weight:700; }
+  .card h2 { margin:2px 0 6px; font-size:1.25rem; line-height:1.25; }
+  .desc { color:var(--muted); margin:0 0 10px; }
+  .time { display:inline-block; background:var(--green-soft); color:var(--green); border-radius:99px; padding:2px 12px; font-size:.8125rem; font-weight:600; }
+  .card h3 { font-size:.8125rem; text-transform:uppercase; letter-spacing:.08em; margin:16px 0 6px; color:var(--muted); }
+  .card ul, .card ol { margin:0; padding-left:20px; }
+  .card li { margin-bottom:4px; }
+  .actions { display:flex; gap:8px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+  .cat { margin-bottom:24px; }
+  .cat h2 { font-size:1.0625rem; border-bottom:2px solid var(--green-soft); padding-bottom:4px; }
+  .cat ul { list-style:none; padding:0; margin:0; columns:2 280px; }
+  .cat li { padding:3px 0; break-inside:avoid; }
+  .cat label { cursor:pointer; }
+  .cat input:checked + span { text-decoration:line-through; color:var(--muted); }
+  .cat .n { color:var(--muted); font-size:.8125rem; }
+  .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .stores { font-size:.8125rem; color:var(--muted); margin:8px 0 0; }
+  @media (max-width: 480px) {
+    header, main, nav { padding-left:12px; padding-right:12px; }
+    h1 { font-size:1.6rem; }
+    nav button { padding:10px 10px; font-size:.9rem; }
+    .card { padding:16px; }
+    .cat ul { columns:1; }
+  }
+
+  .disclaimer { max-width:1100px; margin:8px auto 0; padding:16px 20px 32px; font-size:.8125rem; color:var(--muted); border-top:1px solid var(--line); }
+  .tags { margin:8px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag { display:inline-block; border-radius:99px; padding:2px 10px; font-size:.75rem; font-weight:700; background:#f0f2f1; color:#46504a; }
+  .tag.df { background:#e3f1ff; color:#0b5cad; } .tag.gf { background:#fff3d6; color:#8a5a00; } .tag.reg { background:#f0f2f1; color:#46504a; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .filters button { font:inherit; font-weight:600; padding:7px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; }
+  .filters button.on { background:var(--green); border-color:var(--green); color:#fff; }
+  .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
+  .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .card.hide { display:none; }
+  @media (max-width: 480px) { header, main { padding-left:12px; padding-right:12px; } h1 { font-size:1.6rem; } .card { padding:16px; } }
+  @media print { .filters { display:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Breakfast with <span>Meat</span> Options</h1>
+  <p class="sub">Eight simple, low-carb breakfasts with bacon, Canadian back bacon, ham and sausage.</p>
+  <p class="stores">Ingredients are chosen to be found at Walmart, Save-On Foods, Thrifty Foods, Fairway Market, H Mart, Costco (Langford) and Saanich farm stands.</p>
+</header>
+<main>
+<p class="key">Sausage tip: choose sausage made only from meat, fat and spices, with no blood, offal or other by-products.</p>
+
+<div class="grid">
+<article class="card">
+<h2>Bacon, Egg &amp; Cheddar Skillet</h2>
+<p class="desc">Crispy bacon with soft scrambled eggs and melted cheddar. The classic, in one pan.</p>
+<span class="time">⏱ 3 min prep + 12 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span></div>
+<h3>Ingredients</h3>
+<ul><li>4 slices bacon</li><li>3 eggs</li><li>30 g cheddar, grated</li><li>1 green onion, sliced</li><li>Black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Cut the bacon into short pieces. Cook in a cold skillet over medium heat for 6–8 minutes, until crisp. Pour off all but 1 tbsp of the fat.</li><li>Beat the eggs with black pepper. Pour them into the pan.</li><li>Stir gently for 2–3 minutes, until just set.</li><li>Scatter with the cheddar and green onion and cover for 30 seconds to melt the cheese.</li></ol>
+
+</article>
+<article class="card">
+<h2>Canadian Back Bacon Egg Cups</h2>
+<p class="desc">Slices of Canadian back bacon baked into a muffin tin with an egg and cheddar in each. They keep well in the fridge.</p>
+<span class="time">⏱ 5 min prep + 15 min cook</span> <span class="time">Makes 6 cups (3 breakfasts)</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span><span class="tag ">Make-ahead</span></div>
+<h3>Ingredients</h3>
+<ul><li>6 slices Canadian back bacon</li><li>6 eggs</li><li>40 g cheddar, grated</li><li>1 green onion, sliced</li><li>Black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oven to 375°F (190°C).</li><li>Press a slice of back bacon into each cup of a 6-cup muffin tin to make a little bowl.</li><li>Crack an egg into each cup. Season with black pepper.</li><li>Bake for 12–15 minutes, until the whites are set. Add the cheddar for the last 2 minutes.</li><li>Top with green onion. Cool and store in the fridge for up to 3 days.</li></ol>
+
+</article>
+<article class="card">
+<h2>Sausage, Pepper &amp; Egg Scramble</h2>
+<p class="desc">Browned breakfast sausage with sweet pepper and fluffy scrambled eggs.</p>
+<span class="time">⏱ 5 min prep + 12 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span></div>
+<h3>Ingredients</h3>
+<ul><li>2 breakfast sausages (pork or chicken)</li><li>½ bell pepper, diced</li><li>3 eggs</li><li>1 tsp olive oil</li><li>1 green onion, sliced</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Slice the sausages into coins. Heat the oil in a skillet on medium-high and cook the sausage for 5 minutes, until browned.</li><li>Add the pepper and cook for 3 minutes.</li><li>Beat the eggs with salt and pepper. Pour them in and stir gently for 2–3 minutes.</li><li>Make sure the sausage is cooked through (no pink). Top with green onion.</li></ol>
+<p class="note"><strong>Note:</strong> Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter.</p>
+</article>
+<article class="card">
+<h2>Sheet-Pan Bacon, Eggs &amp; Tomatoes</h2>
+<p class="desc">Bacon, eggs and roasted tomatoes cooked together on one tray, with little to wash up.</p>
+<span class="time">⏱ 3 min prep + 15 min cook</span> <span class="time">Serves 2</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span></div>
+<h3>Ingredients</h3>
+<ul><li>6 slices bacon</li><li>4 eggs</li><li>150 g cherry tomatoes</li><li>1 handful (40 g) baby spinach</li><li>Black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oven to 400°F (200°C). Line a baking sheet with foil.</li><li>Lay the bacon on one side of the sheet and put the tomatoes on the other. Bake for 8 minutes.</li><li>Make 4 gaps for the eggs and crack one into each. Bake for 5–7 minutes, until the whites are set.</li><li>Serve on the spinach with black pepper.</li></ol>
+
+</article>
+<article class="card">
+<h2>Ham &amp; Cheese Omelet</h2>
+<p class="desc">A fluffy omelet with diced ham, melted cheddar and chives.</p>
+<span class="time">⏱ 5 min prep + 6 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span></div>
+<h3>Ingredients</h3>
+<ul><li>3 eggs</li><li>60 g cooked ham, diced</li><li>30 g cheddar, grated</li><li>1 tbsp butter</li><li>1 tbsp chopped fresh chives</li><li>Black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Beat the eggs with black pepper.</li><li>Melt the butter in a non-stick skillet on medium-high. Pour in the eggs and stir gently for 30 seconds.</li><li>Leave for 1–2 minutes until nearly set. Add the ham and cheddar to one half.</li><li>Fold the other half over, slide onto a plate and top with chives.</li></ol>
+
+</article>
+<article class="card">
+<h2>Sausage &amp; Spinach Frittata</h2>
+<p class="desc">A skillet frittata with browned sausage and spinach. Eat half now and keep the rest for tomorrow.</p>
+<span class="time">⏱ 10 min prep + 18 min cook</span> <span class="time">Serves 2</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span><span class="tag ">Make-ahead</span></div>
+<h3>Ingredients</h3>
+<ul><li>3 breakfast sausages (pork or chicken)</li><li>6 eggs</li><li>2 handfuls (80 g) baby spinach</li><li>60 g cheddar or mozzarella</li><li>1 tsp olive oil</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oven to 400°F (200°C). Slice the sausages into coins.</li><li>Heat the oil in an oven-safe skillet on medium-high. Cook the sausage for 5 minutes, until browned. Add the spinach until wilted.</li><li>Beat the eggs with salt and pepper. Pour over the sausage and scatter with the cheese.</li><li>Cook for 2 minutes, then put in the oven for 8–10 minutes, until set in the middle.</li><li>Make sure the sausage is cooked through. Cut into wedges.</li></ol>
+<p class="note"><strong>Note:</strong> Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter.</p>
+</article>
+<article class="card">
+<h2>Back Bacon &amp; Mushroom Cauliflower Hash</h2>
+<p class="desc">A low-carb hash made from finely chopped cauliflower, mushrooms and Canadian back bacon, topped with a fried egg.</p>
+<span class="time">⏱ 10 min prep + 15 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span></div>
+<h3>Ingredients</h3>
+<ul><li>100 g cauliflower, finely chopped (or 1 cup cauliflower rice)</li><li>3 slices Canadian back bacon, diced</li><li>60 g mushrooms, diced</li><li>1 tbsp olive oil</li><li>½ tsp paprika</li><li>1 egg</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat half the oil in a skillet on medium-high. Cook the cauliflower and mushrooms for 6 minutes, stirring now and then, until browned.</li><li>Add the bacon and paprika and cook for 3 minutes. Season, then move to a plate.</li><li>Add the remaining oil to the pan and fry the egg for 3 minutes.</li><li>Put the egg on the hash.</li></ol>
+
+</article>
+<article class="card">
+<h2>Homemade Sage Pork Sausage Patties with Eggs &amp; Spinach</h2>
+<p class="desc">Simple breakfast sausage patties you make yourself from ground pork, so you know there are no by-products. Served with fried eggs and spinach.</p>
+<span class="time">⏱ 10 min prep + 12 min cook</span> <span class="time">Serves 2</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Pork</span><span class="tag ">No by-products</span></div>
+<h3>Ingredients</h3>
+<ul><li>250 g ground pork</li><li>1 tsp dried sage</li><li>½ tsp dried thyme</li><li>½ tsp paprika</li><li>¼ tsp salt</li><li>Black pepper</li><li>1 tbsp olive oil</li><li>4 eggs</li><li>2 handfuls (80 g) baby spinach</li></ul>
+<h3>Method</h3>
+<ol><li>Mix the pork with the sage, thyme, paprika, salt and pepper. Shape into 4 small patties, about 1.5 cm thick.</li><li>Heat half the oil in a skillet on medium. Cook the patties for 4–5 minutes per side, until browned and cooked through (no pink, 160°F / 71°C). Move to a plate.</li><li>Add the remaining oil and fry the eggs for 3 minutes.</li><li>Wilt the spinach in the same pan for 1 minute. Serve with the patties and eggs.</li></ol>
+
+</article>
+</div>
+
+</main>
+<p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+</body>
+</html>
