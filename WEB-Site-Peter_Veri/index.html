@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Peter Veri | What's Your Home Worth?</title>
@@ -171,7 +172,9 @@
   .map-modal.is-recipe .map-modal-cta, .map-modal.is-recipe .map-modal-map, .map-modal.is-recipe .map-modal-body { display: none; }
   .map-modal.is-recipe .recipe-modal-title { display: block; font-family: "Georgia", serif; font-size: 1.3rem; font-weight: bold; color: var(--text); }
   .map-modal.is-recipe .recipe-modal-body { display: block; }
-  .recipe-modal-body iframe { display: block; width: 100%; height: min(75vh, 720px); border: 0; background: #fff; }
+  .recipe-modal-body iframe { display: block; width: 100%; height: min(66vh, 720px); border: 0; background: #fff; }
+  .recipe-disclaimer { display: none; margin: 0; padding: 10px 25px 14px; border-top: 1px solid var(--border); font-size: 0.72rem; line-height: 1.4; color: #b3b3b3; }
+  .map-modal.is-recipe .recipe-disclaimer { display: block; }
   .recipe-soon { margin: 0; padding: 40px 25px; text-align: center; color: #b3b3b3; font-style: italic; }
   @media (prefers-reduced-motion: reduce) { .egg-card, .egg-dot { transition: none; } }
 * { box-sizing: border-box; }
@@ -288,6 +291,7 @@ img { max-width: 100%; height: auto; }
 <p>Downtown to West Shore family homes, I know these neighbourhoods because I work in them.</p>
 </div>
 
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
 <ul id="areas" class="areas-grid" aria-label="Service areas">
   <li class="area-slot">
     <div class="area-circle" data-area="Victoria" data-lat="48.4284" data-lng="-123.3656" data-zoom="12" role="button" tabindex="0">Victoria</div>
@@ -323,6 +327,7 @@ img { max-width: 100%; height: auto; }
 <div class="map-modal-head"><button type="button" id="map-modal-cta" class="map-modal-cta">What’s my home worth in: <strong id="map-modal-title">Victoria</strong></button><strong id="recipe-modal-title" class="recipe-modal-title"></strong><button type="button" class="map-modal-close" id="map-modal-close" aria-label="Close">&times;</button></div>
 <div id="map-modal-map" class="map-modal-map"></div>
 <div id="recipe-modal-body" class="recipe-modal-body"></div>
+<p class="recipe-disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please check every ingredient carefully to make sure it is safe for YOU before making any of these recipes. No warranty of any kind is given on the recipes.</p>
 <div class="map-modal-body"><p class="placeholder" id="map-modal-history">[history text goes here]</p><p id="map-modal-links" style="margin-top: 14px; font-size: 0.85rem;"></p></div>
 </div>
 </div>
@@ -486,10 +491,10 @@ img { max-width: 100%; height: auto; }
   var recipeBodyEl = document.getElementById('recipe-modal-body');
   var recipes = {
     'veggie': { label: 'Veggie Options', src: 'recipes/veggie-week-planner.html' },
-    'breakfast-veggie': { label: 'Breakfast Veggie Options' },
-    'meat': { label: 'Meat Options' },
-    'breakfast-meat': { label: 'Breakfast W/Meat Options' },
-    'desserts': { label: 'Desserts' }
+    'breakfast-veggie': { label: 'Breakfast Veggie Options', src: 'recipes/breakfast-veggie.html' },
+    'meat': { label: 'Meat Options', src: 'recipes/meat-options.html' },
+    'breakfast-meat': { label: 'Breakfast W/Meat Options', src: 'recipes/breakfast-meat.html' },
+    'desserts': { label: 'Desserts', src: 'recipes/desserts.html' }
   };
   function exitRecipeMode() {
     modalEl.classList.remove('is-recipe');

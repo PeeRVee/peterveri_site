@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veggie Breakfast Options</title>
+<meta name="description" content="Eight simple, low-carb vegetarian breakfasts, plus a bonus overnight steel-cut oats recipe.">
+<style>
+  :root { --ink:#1f2a24; --muted:#6b756f; --line:#e6e9e7; --green:#2f7a4d; --green-soft:#eef6f1; --red:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { max-width:1100px; margin:0 auto; padding:32px 20px 8px; }
+  h1 { margin:0; font-size:2rem; letter-spacing:-.02em; }
+  h1 span { color:var(--green); }
+  .sub { color:var(--muted); margin:4px 0 0; }
+  nav { max-width:1100px; margin:16px auto 0; padding:0 20px; display:flex; gap:4px; border-bottom:1px solid var(--line); }
+  nav button { background:none; border:0; padding:10px 16px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-1px; }
+  nav button.active { color:var(--green); border-color:var(--green); font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:20px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .btn { font:inherit; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid var(--green); background:var(--green); color:#fff; cursor:pointer; }
+  .btn:hover { filter:brightness(1.08); }
+  .btn.ghost { background:#fff; color:var(--green); }
+  .btn.small { padding:6px 12px; font-size:.875rem; }
+  .btn.fav.on { background:var(--green-soft); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:20px; align-items:start; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .day { font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--green); font-weight:700; }
+  .card h2 { margin:2px 0 6px; font-size:1.25rem; line-height:1.25; }
+  .desc { color:var(--muted); margin:0 0 10px; }
+  .time { display:inline-block; background:var(--green-soft); color:var(--green); border-radius:99px; padding:2px 12px; font-size:.8125rem; font-weight:600; }
+  .card h3 { font-size:.8125rem; text-transform:uppercase; letter-spacing:.08em; margin:16px 0 6px; color:var(--muted); }
+  .card ul, .card ol { margin:0; padding-left:20px; }
+  .card li { margin-bottom:4px; }
+  .actions { display:flex; gap:8px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+  .cat { margin-bottom:24px; }
+  .cat h2 { font-size:1.0625rem; border-bottom:2px solid var(--green-soft); padding-bottom:4px; }
+  .cat ul { list-style:none; padding:0; margin:0; columns:2 280px; }
+  .cat li { padding:3px 0; break-inside:avoid; }
+  .cat label { cursor:pointer; }
+  .cat input:checked + span { text-decoration:line-through; color:var(--muted); }
+  .cat .n { color:var(--muted); font-size:.8125rem; }
+  .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .stores { font-size:.8125rem; color:var(--muted); margin:8px 0 0; }
+  @media (max-width: 480px) {
+    header, main, nav { padding-left:12px; padding-right:12px; }
+    h1 { font-size:1.6rem; }
+    nav button { padding:10px 10px; font-size:.9rem; }
+    .card { padding:16px; }
+    .cat ul { columns:1; }
+  }
+
+  .disclaimer { max-width:1100px; margin:8px auto 0; padding:16px 20px 32px; font-size:.8125rem; color:var(--muted); border-top:1px solid var(--line); }
+  .tags { margin:8px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag { display:inline-block; border-radius:99px; padding:2px 10px; font-size:.75rem; font-weight:700; background:#f0f2f1; color:#46504a; }
+  .tag.df { background:#e3f1ff; color:#0b5cad; } .tag.gf { background:#fff3d6; color:#8a5a00; } .tag.reg { background:#f0f2f1; color:#46504a; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .filters button { font:inherit; font-weight:600; padding:7px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; }
+  .filters button.on { background:var(--green); border-color:var(--green); color:#fff; }
+  .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
+  .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .card.hide { display:none; }
+  @media (max-width: 480px) { header, main { padding-left:12px; padding-right:12px; } h1 { font-size:1.6rem; } .card { padding:16px; } }
+  @media print { .filters { display:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Veggie <span>Breakfast</span> Options</h1>
+  <p class="sub">Eight simple, low-carb vegetarian breakfasts, plus a bonus overnight steel-cut oats recipe.</p>
+  <p class="stores">Ingredients are chosen to be found at Walmart, Save-On Foods, Thrifty Foods, Fairway Market, H Mart, Costco (Langford) and Saanich farm stands.</p>
+</header>
+<main>
+
+
+<div class="grid">
+<article class="card">
+<h2>Spinach &amp; Feta Scramble</h2>
+<p class="desc">Soft, creamy scrambled eggs with wilted spinach, salty feta and sweet cherry tomatoes.</p>
+<span class="time">⏱ 3 min prep + 5 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span></div>
+<h3>Ingredients</h3>
+<ul><li>3 eggs</li><li>1 tbsp butter</li><li>1 handful (40 g) baby spinach</li><li>30 g feta</li><li>5 cherry tomatoes</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Beat the eggs with a pinch of salt and pepper. Halve the tomatoes.</li><li>Melt the butter in a non-stick skillet on medium heat. Add the spinach and stir for 30 seconds, until wilted.</li><li>Pour in the eggs. Stir gently for 2–3 minutes, until just set but still soft.</li><li>Crumble the feta on top and add the tomatoes.</li></ol>
+
+</article>
+<article class="card">
+<h2>Cheddar &amp; Chive Omelet with Mushrooms</h2>
+<p class="desc">A fluffy omelet filled with browned mushrooms, sharp cheddar and fresh chives.</p>
+<span class="time">⏱ 5 min prep + 8 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span></div>
+<h3>Ingredients</h3>
+<ul><li>3 eggs</li><li>80 g mushrooms</li><li>30 g cheddar, grated</li><li>1 tbsp butter</li><li>1 tbsp chopped fresh chives</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Slice the mushrooms. Melt half the butter in a non-stick skillet on medium-high and cook the mushrooms for 4 minutes. Tip onto a plate.</li><li>Beat the eggs with salt and pepper. Wipe the pan, melt the remaining butter and pour in the eggs.</li><li>Stir gently for 30 seconds, then leave for 1–2 minutes until nearly set.</li><li>Add the mushrooms, cheddar and chives to one half. Fold the other half over and slide onto a plate.</li></ol>
+
+</article>
+<article class="card">
+<h2>Greek Yogurt Bowl with Berries &amp; Walnuts</h2>
+<p class="desc">Thick, creamy plain yogurt with a few berries, crunchy walnuts and cinnamon. No cooking needed.</p>
+<span class="time">⏱ 3 min prep, no cooking</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span><span class="tag ">No cooking</span></div>
+<h3>Ingredients</h3>
+<ul><li>200 g plain Greek yogurt (unsweetened)</li><li>80 g berries (blueberries, raspberries or strawberries)</li><li>20 g walnuts, roughly chopped</li><li>½ tsp cinnamon</li></ul>
+<h3>Method</h3>
+<ol><li>Spoon the yogurt into a bowl.</li><li>Top with the berries and walnuts.</li><li>Sprinkle with the cinnamon.</li></ol>
+
+</article>
+<article class="card">
+<h2>Baked Eggs in Spiced Tomato Sauce</h2>
+<p class="desc">Two eggs poached in a smoky tomato sauce, topped with feta and parsley. A small shakshuka for one.</p>
+<span class="time">⏱ 5 min prep + 15 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span></div>
+<h3>Ingredients</h3>
+<ul><li>1 tsp olive oil</li><li>1 garlic clove</li><li>½ tsp paprika</li><li>200 g canned chopped tomatoes</li><li>2 eggs</li><li>30 g feta</li><li>1 tbsp chopped fresh parsley</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oil in a small skillet on medium. Add the crushed garlic and paprika and stir for 30 seconds.</li><li>Add the tomatoes with salt and pepper and simmer for 6 minutes until thicker.</li><li>Make 2 dips in the sauce and crack an egg into each. Cover and cook for 4–5 minutes, until the whites are set.</li><li>Crumble the feta on top and add the parsley.</li></ol>
+
+</article>
+<article class="card">
+<h2>Zucchini &amp; Cheddar Egg Muffins</h2>
+<p class="desc">Grab-and-go egg muffins you can make on Sunday. They keep in the fridge for 3 days and reheat in 1 minute.</p>
+<span class="time">⏱ 10 min prep + 20 min cook</span> <span class="time">Makes 6 muffins (3 breakfasts)</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span><span class="tag ">Make-ahead</span></div>
+<h3>Ingredients</h3>
+<ul><li>6 eggs</li><li>1 small zucchini, grated</li><li>60 g cheddar, grated</li><li>2 green onions, sliced</li><li>1 tsp olive oil (for the pan)</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oven to 375°F (190°C). Lightly oil a 6-cup muffin tin.</li><li>Squeeze the grated zucchini in a paper towel to remove the water.</li><li>Beat the eggs with salt and pepper. Stir in the zucchini, cheddar and green onions.</li><li>Divide the mixture between the 6 cups. Bake for 18–20 minutes, until set and lightly golden.</li><li>Cool, then store in the fridge. Reheat in the microwave for 45–60 seconds.</li></ol>
+
+</article>
+<article class="card">
+<h2>Tofu Scramble with Peppers &amp; Spinach</h2>
+<p class="desc">A savoury, egg-free scramble with extra firm tofu, turmeric and cumin. High in protein and easy to make.</p>
+<span class="time">⏱ 5 min prep + 10 min cook</span> <span class="time">Serves 2</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegan-friendly</span><span class="tag ">Egg-free</span></div>
+<h3>Ingredients</h3>
+<ul><li>280 g extra firm tofu</li><li>1 tbsp olive oil</li><li>1 bell pepper, diced</li><li>1 green onion, sliced</li><li>1 tsp turmeric</li><li>½ tsp cumin</li><li>2 handfuls (80 g) baby spinach</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Drain the tofu and pat it dry. Crumble it into small pieces with your hands.</li><li>Heat the oil in a large skillet on medium-high. Cook the pepper for 3 minutes.</li><li>Add the tofu, turmeric, cumin, salt and pepper. Cook for 5 minutes, stirring, until hot and lightly golden.</li><li>Add the spinach and stir until wilted. Top with green onion.</li></ol>
+
+</article>
+<article class="card">
+<h2>Veggie Frittata (for Two Days)</h2>
+<p class="desc">A skillet frittata packed with peppers, mushrooms and spinach. Eat half now and keep the rest for the next day.</p>
+<span class="time">⏱ 10 min prep + 15 min cook</span> <span class="time">Serves 2</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span><span class="tag ">Make-ahead</span></div>
+<h3>Ingredients</h3>
+<ul><li>6 eggs</li><li>1 tbsp olive oil</li><li>1 bell pepper, diced</li><li>100 g mushrooms, sliced</li><li>2 handfuls (80 g) baby spinach</li><li>60 g cheddar or feta</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Heat the oven to 400°F (200°C). Beat the eggs with salt and pepper.</li><li>Heat the oil in an oven-safe skillet on medium-high. Cook the pepper and mushrooms for 5 minutes. Add the spinach until wilted.</li><li>Pour the eggs over the vegetables and scatter with the cheese. Cook for 2 minutes without stirring, until the edges start to set.</li><li>Put the skillet in the oven for 8–10 minutes, until the middle is set. Carefully remove it (the handle will be hot).</li><li>Cut into wedges. Store leftovers in the fridge and reheat for 1 minute.</li></ol>
+
+</article>
+<article class="card">
+<h2>Soft-Boiled Eggs with Garlic Asparagus</h2>
+<p class="desc">Jammy soft-boiled eggs with garlic-butter asparagus spears for dipping.</p>
+<span class="time">⏱ 3 min prep + 10 min cook</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Low-carb</span><span class="tag ">Vegetarian</span></div>
+<h3>Ingredients</h3>
+<ul><li>2 eggs</li><li>150 g asparagus</li><li>1 tbsp butter</li><li>1 garlic clove</li><li>Salt and black pepper</li></ul>
+<h3>Method</h3>
+<ol><li>Bring a small pot of water to a boil. Lower in the eggs gently and cook for 6½ minutes. Move them to a bowl of cold water.</li><li>Snap the tough ends off the asparagus.</li><li>Melt the butter in a skillet on medium-high. Cook the asparagus for 4–5 minutes. Add the crushed garlic for the last minute. Season.</li><li>Peel the eggs, cut them open, and dip the asparagus into the yolks.</li></ol>
+
+</article>
+<article class="card">
+<h2>Overnight Steel-Cut Oats (Bonus)</h2>
+<p class="desc">Chewy, creamy steel-cut oats prepared the night before. Oats are higher in carbs than the other breakfasts here, so keep the portion small and add protein (yogurt and nuts).</p>
+<span class="time">⏱ 5 min prep + overnight soak</span> <span class="time">Serves 1</span>
+<div class="tags"><span class="tag ">Make-ahead</span><span class="tag ">Vegetarian</span><span class="tag ">Higher carb</span></div>
+<h3>Ingredients</h3>
+<ul><li>¼ cup (45 g) steel-cut oats</li><li>½ cup (125 ml) milk</li><li>¼ cup (60 g) plain Greek yogurt</li><li>½ tsp cinnamon</li><li>1 tbsp chopped walnuts</li><li>Handful of berries (optional)</li><li>Pinch of salt</li></ul>
+<h3>Method</h3>
+<ol><li>In a jar, stir together the oats, milk, yogurt, cinnamon and salt.</li><li>Cover and put in the fridge overnight, for 8–12 hours.</li><li>In the morning, stir. Steel-cut oats stay chewy when eaten cold, so for a softer, warm bowl, microwave for 1½–2 minutes, adding a splash of milk if it is thick.</li><li>Top with the walnuts and berries.</li></ol>
+<p class="note"><strong>Note:</strong> Higher in carbs: pair it with protein, and check with your care team how much oats suit you.</p>
+</article>
+</div>
+
+</main>
+<p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+</body>
+</html>

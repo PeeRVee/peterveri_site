@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Veggie Week Planner</title>
@@ -49,6 +50,17 @@
     .card { padding:16px; }
     .cat ul { columns:1; }
   }
+
+  .disclaimer { max-width:1100px; margin:8px auto 0; padding:16px 20px 32px; font-size:.8125rem; color:var(--muted); border-top:1px solid var(--line); }
+  .tags { margin:8px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag { display:inline-block; border-radius:99px; padding:2px 10px; font-size:.75rem; font-weight:700; background:#f0f2f1; color:#46504a; }
+  .tag.df { background:#e3f1ff; color:#0b5cad; } .tag.gf { background:#fff3d6; color:#8a5a00; } .tag.reg { background:#f0f2f1; color:#46504a; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .filters button { font:inherit; font-weight:600; padding:7px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; }
+  .filters button.on { background:var(--green); border-color:var(--green); color:#fff; }
+  .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
+  .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .card.hide { display:none; }
   @media print { nav, .toolbar, .actions { display:none; } }
 </style>
 </head>
@@ -77,6 +89,8 @@
     <div id="listBody"></div>
   </section>
 </main>
+<p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+
 
 <script>
 // ---------- Recipe data ----------

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- The author wanted to have weekly recipe ideas, so he thought it would be fun and useful to site visitors to find the Goose Eggs and search for recipes they might like. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meat Week Planner</title>
+<style>
+  :root { --ink:#1f2a24; --muted:#6b756f; --line:#e6e9e7; --green:#2f7a4d; --green-soft:#eef6f1; --red:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { max-width:1100px; margin:0 auto; padding:32px 20px 8px; }
+  h1 { margin:0; font-size:2rem; letter-spacing:-.02em; }
+  h1 span { color:var(--green); }
+  .sub { color:var(--muted); margin:4px 0 0; }
+  nav { max-width:1100px; margin:16px auto 0; padding:0 20px; display:flex; gap:4px; border-bottom:1px solid var(--line); }
+  nav button { background:none; border:0; padding:10px 16px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-1px; }
+  nav button.active { color:var(--green); border-color:var(--green); font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:20px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .btn { font:inherit; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid var(--green); background:var(--green); color:#fff; cursor:pointer; }
+  .btn:hover { filter:brightness(1.08); }
+  .btn.ghost { background:#fff; color:var(--green); }
+  .btn.small { padding:6px 12px; font-size:.875rem; }
+  .btn.fav.on { background:var(--green-soft); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:20px; align-items:start; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .day { font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--green); font-weight:700; }
+  .card h2 { margin:2px 0 6px; font-size:1.25rem; line-height:1.25; }
+  .desc { color:var(--muted); margin:0 0 10px; }
+  .time { display:inline-block; background:var(--green-soft); color:var(--green); border-radius:99px; padding:2px 12px; font-size:.8125rem; font-weight:600; }
+  .card h3 { font-size:.8125rem; text-transform:uppercase; letter-spacing:.08em; margin:16px 0 6px; color:var(--muted); }
+  .card ul, .card ol { margin:0; padding-left:20px; }
+  .card li { margin-bottom:4px; }
+  .actions { display:flex; gap:8px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+  .cat { margin-bottom:24px; }
+  .cat h2 { font-size:1.0625rem; border-bottom:2px solid var(--green-soft); padding-bottom:4px; }
+  .cat ul { list-style:none; padding:0; margin:0; columns:2 280px; }
+  .cat li { padding:3px 0; break-inside:avoid; }
+  .cat label { cursor:pointer; }
+  .cat input:checked + span { text-decoration:line-through; color:var(--muted); }
+  .cat .n { color:var(--muted); font-size:.8125rem; }
+  .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .stores { font-size:.8125rem; color:var(--muted); margin:8px 0 0; }
+  @media (max-width: 480px) {
+    header, main, nav { padding-left:12px; padding-right:12px; }
+    h1 { font-size:1.6rem; }
+    nav button { padding:10px 10px; font-size:.9rem; }
+    .card { padding:16px; }
+    .cat ul { columns:1; }
+  }
+
+  .disclaimer { max-width:1100px; margin:8px auto 0; padding:16px 20px 32px; font-size:.8125rem; color:var(--muted); border-top:1px solid var(--line); }
+  .tags { margin:8px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag { display:inline-block; border-radius:99px; padding:2px 10px; font-size:.75rem; font-weight:700; background:#f0f2f1; color:#46504a; }
+  .tag.df { background:#e3f1ff; color:#0b5cad; } .tag.gf { background:#fff3d6; color:#8a5a00; } .tag.reg { background:#f0f2f1; color:#46504a; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .filters button { font:inherit; font-weight:600; padding:7px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; }
+  .filters button.on { background:var(--green); border-color:var(--green); color:#fff; }
+  .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
+  .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
+  .card.hide { display:none; }
+  @media print { nav, .toolbar, .actions { display:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Meat <span>Week</span> Planner</h1>
+  <p class="sub">Seven quick, low-carb dinners with chicken, pork or beef. Each makes 2 servings: dinner tonight, lunch tomorrow.</p>
+  <p class="stores">Ingredients are chosen to be found at Walmart, Save-On Foods, Thrifty Foods, Fairway Market, H Mart, Costco (Langford) and Saanich farm stands.</p>
+</header>
+<nav id="tabs">
+  <button data-tab="week" class="active">This Week</button>
+  <button data-tab="favs">My Favorites (<span id="favCount">0</span>)</button>
+  <button data-tab="list">Shopping List</button>
+</nav>
+<main>
+  <section id="week">
+    <div class="toolbar">
+      <button class="btn" id="genWeek">Generate Week</button>
+      <button class="btn ghost" id="genList">Generate Shopping List</button>
+    </div>
+    <div class="grid" id="weekGrid"></div>
+  </section>
+  <section id="favs" hidden><div class="grid" id="favGrid"></div></section>
+  <section id="list" hidden>
+    <div class="toolbar"><button class="btn ghost" onclick="window.print()">Print list</button></div>
+    <div id="listBody"></div>
+  </section>
+</main>
+<p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+
+
+<script>
+// ---------- Recipe data ----------
+// I(name, qty, unit, category): quantities are for 2 people. Use the same name+unit
+// for the same ingredient across recipes so the shopping list can merge them.
+const P='Produce', PA='Pantry', D='Dairy & Eggs', PR='Meat & Protein', FR='Frozen';
+const I = (name, qty, unit, cat) => ({ name, qty, unit, cat });
+const SP = I('salt & black pepper', null, '', PA);
+
+const RECIPES = [
+ { id:'m1',
+   name:'Sheet-Pan Lemon-Herb Chicken Thighs with Broccoli', time:'5 min prep + 22 min cook',
+   desc:'Juicy, crisp-edged chicken thighs roasted with garlic, oregano and lemon, with broccoli on the same tray.',
+   ing:[I('boneless chicken thigh',450,'g',PR),I('broccoli',1,'head',P),I('olive oil',2,'tbsp',PA),I('garlic',3,'clove',P),I('dried oregano',1,'tsp',PA),I('paprika',1,'tsp',PA),I('lemon',1,'',P),SP],
+   steps:['Heat the oven to 425°F (220°C). Cut the broccoli into small florets and crush the garlic.','Put the chicken and broccoli on a baking sheet. Add the oil, garlic, oregano, paprika, salt, pepper and the juice of ½ lemon. Mix with your hands.','Spread the chicken out in a single layer, with the broccoli around it.','Roast for 20–22 minutes, until the chicken is cooked through (no pink inside, 165°F / 74°C) and the broccoli is browned at the edges.','Serve with the other lemon half in wedges.'] },
+ { id:'m2',
+   name:'Garlic Butter Chicken & Mushroom Skillet', time:'10 min prep + 15 min cook',
+   desc:'Thin chicken cutlets in a garlicky butter and thyme sauce with browned mushrooms and wilted spinach.',
+   ing:[I('chicken breast',2,'',PR),I('mushroom',250,'g',P),I('butter',2,'tbsp',D),I('olive oil',1,'tbsp',PA),I('garlic',3,'clove',P),I('dried thyme',1,'tsp',PA),I('baby spinach',100,'g',P),SP],
+   steps:['Cut each chicken breast in half horizontally, so you have 4 thin pieces. Season with salt and pepper. Slice the mushrooms.','Heat the oil and half the butter in a large skillet on medium-high. Cook the chicken for 4–5 minutes per side, until cooked through (no pink, 165°F / 74°C). Move to a plate.','Add the remaining butter and the mushrooms to the same pan. Cook for 5 minutes, until browned.','Add the crushed garlic and thyme for 30 seconds, then the spinach until wilted.','Return the chicken to the pan and spoon the sauce over it.'] },
+ { id:'m3',
+   name:'Chicken & Zucchini Ginger-Soy Stir-Fry', time:'10 min prep + 12 min cook',
+   desc:'Quick-seared chicken with zucchini and bell pepper in a garlic, ginger and soy sauce.',
+   ing:[I('chicken breast',2,'',PR),I('zucchini',2,'',P),I('bell pepper',1,'',P),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',2,'cm',P),I('soy sauce',3,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',2,'',P)],
+   steps:['Slice the chicken into thin strips. Cut the zucchini into half-moons and the pepper into strips. Crush the garlic, grate the ginger and slice the green onions.','Heat 1 tbsp oil in a large skillet on high. Cook the chicken for 5–6 minutes, stirring, until cooked through (no pink inside). Move to a plate.','Add the remaining oil, zucchini and pepper. Cook for 4 minutes, stirring.','Add the garlic and ginger for 30 seconds, then the soy sauce, sesame oil and the chicken. Toss for 1 minute.','Top with green onion.'] },
+ { id:'m4',
+   name:'Thyme Butter Pork Chops with Roasted Brussels Sprouts', time:'10 min prep + 20 min cook',
+   desc:'Seared pork chops basted in garlic-thyme butter, with crispy roasted Brussels sprouts.',
+   ing:[I('boneless pork chop',2,'',PR),I('Brussels sprouts',300,'g',P),I('butter',2,'tbsp',D),I('olive oil',1,'tbsp',PA),I('garlic',2,'clove',P),I('dried thyme',1,'tsp',PA),I('paprika',1,'tsp',PA),SP],
+   steps:['Heat the oven to 425°F (220°C). Trim and halve the Brussels sprouts. Put them on a baking sheet with the oil, salt and pepper. Roast for 18 minutes.','Pat the pork chops dry. Season both sides with salt, pepper and paprika.','Melt half the butter in a skillet on medium-high. Cook the chops for 4–5 minutes per side, until cooked through (145°F / 63°C, with a little blush of pink being fine).','In the last minute, add the remaining butter, crushed garlic and thyme and spoon it over the chops.','Rest the chops on a plate for 3 minutes. Serve with the sprouts.'] },
+ { id:'m5', note:'Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter at Save-On Foods, Thrifty Foods or Costco (Langford).',
+   name:'Italian Sausage & Peppers Skillet', time:'10 min prep + 18 min cook',
+   desc:'Browned sausage coins with sweet peppers, onion and cherry tomatoes. One pan, big flavour.',
+   ing:[I('pork Italian sausage',4,'',PR),I('bell pepper',2,'',P),I('red onion',1,'',P),I('cherry tomato',150,'g',P),I('garlic',2,'clove',P),I('olive oil',1,'tbsp',PA),I('dried oregano',1,'tsp',PA),SP],
+   steps:['Slice the sausages into coins about 2 cm thick. Slice the peppers and onion and halve the tomatoes.','Heat the oil in a large skillet on medium-high. Cook the sausage for 6 minutes, turning, until browned.','Add the peppers and onion. Cook for 8 minutes, stirring, until soft.','Add the crushed garlic, oregano and tomatoes. Cook for 3 minutes. Make sure the sausage is cooked through (no pink, 160°F / 71°C).'] },
+ { id:'m6', note:'Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter at Save-On Foods, Thrifty Foods or Costco (Langford).',
+   name:'Smoked Sausage & Cabbage Skillet', time:'10 min prep + 15 min cook',
+   desc:'Sweet, tender cabbage fried with smoky sausage, onion and mustard seed.',
+   ing:[I('smoked pork sausage',300,'g',PR),I('green cabbage',300,'g',P),I('red onion',1,'',P),I('olive oil',1,'tbsp',PA),I('paprika',1,'tsp',PA),I('mustard seed',1,'tsp',PA),SP],
+   steps:['Slice the sausage into coins. Slice the onion and cut the cabbage into thin strips.','Heat the oil in a large skillet on medium-high. Cook the sausage for 5 minutes, until browned. Move to a plate.','Add the onion, mustard seed and paprika to the pan. Cook for 3 minutes.','Add the cabbage and a splash of water. Cook for 6 minutes, stirring, until tender.','Return the sausage and stir for 1 minute until hot. Season with salt and pepper.'] },
+ { id:'m7',
+   name:'Beef & Broccoli Stir-Fry', time:'10 min prep + 10 min cook',
+   desc:'Tender strips of sirloin and bright broccoli in a quick garlic, ginger and hoisin sauce.',
+   ing:[I('beef sirloin',300,'g',PR),I('broccoli',1,'head',P),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('fresh ginger',2,'cm',P),I('soy sauce',3,'tbsp',PA),I('hoisin sauce',1,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',2,'',P),I('sesame seeds',1,'tbsp',PA)],
+   steps:['Put the steak in the freezer for 10 minutes, which makes it easier to slice. Then slice it very thinly across the grain. Cut the broccoli into small florets.','Mix the soy sauce, hoisin and sesame oil with 2 tbsp water in a small bowl. Crush the garlic and grate the ginger.','Heat 1 tbsp oil in a large skillet on high. Cook the beef for 2–3 minutes, until browned. Move to a plate.','Add the remaining oil, broccoli and a splash of water. Cook for 4 minutes. Add the garlic and ginger for 30 seconds.','Return the beef, pour in the sauce and toss for 1 minute. Top with green onion and sesame seeds.'] },
+ { id:'m8',
+   name:'Cheeseburger Salad Bowls', time:'10 min prep + 10 min cook',
+   desc:'Everything you like about a cheeseburger, in a bowl: seasoned beef, crisp romaine, tomato, cheddar and a creamy lemon-yogurt sauce.',
+   ing:[I('lean ground beef',400,'g',PR),I('romaine heart',2,'',P),I('cherry tomato',150,'g',P),I('cucumber',0.5,'',P),I('red onion',0.5,'',P),I('cheddar',60,'g',D),I('Greek yogurt',80,'g',D),I('lemon',1,'',P),I('paprika',1,'tsp',PA),I('garlic',1,'clove',P),SP],
+   steps:['Chop the romaine. Halve the tomatoes, dice the cucumber and finely slice the onion. Grate the cheddar.','Mix the yogurt with the juice of ½ lemon, a crushed garlic clove and a pinch of salt.','Cook the beef in a dry skillet on medium-high for 8 minutes, breaking it up, until browned and no pink remains (160°F / 71°C). Add the paprika, salt and pepper.','Divide the romaine, tomatoes, cucumber and onion between two bowls. Top with the beef and cheddar.','Drizzle with the sauce. Serve with lemon wedges.'] },
+ { id:'m9',
+   name:'Chicken Fajita Skillet', time:'10 min prep + 15 min cook',
+   desc:'Spiced chicken with charred peppers and onion, topped with cheddar and lime yogurt. No tortillas needed.',
+   ing:[I('chicken breast',2,'',PR),I('bell pepper',2,'',P),I('red onion',1,'',P),I('olive oil',2,'tbsp',PA),I('chili powder',2,'tsp',PA),I('cumin',1,'tsp',PA),I('paprika',1,'tsp',PA),I('lime',1,'',P),I('cheddar',50,'g',D),I('Greek yogurt',80,'g',D),SP],
+   steps:['Slice the chicken, peppers and onion into thin strips. Toss the chicken with the chili powder, cumin, paprika and salt.','Heat 1 tbsp oil in a large skillet on high. Cook the chicken for 6 minutes, stirring, until cooked through (no pink). Move to a plate.','Add the remaining oil, peppers and onion. Cook for 6 minutes, until charred in places.','Return the chicken and add the juice of ½ lime.','Mix the yogurt with the juice of the other ½ lime and a pinch of salt. Grate the cheddar. Serve the fajita mix with both on top.'] },
+ { id:'m10',
+   name:'Egg-Fried Cauliflower Rice with Chicken & Edamame', time:'5 min prep + 12 min cook',
+   desc:'A takeout-style fried rice made with cauliflower rice, chicken, scrambled egg and edamame.',
+   ing:[I('cauliflower rice',300,'g',P),I('chicken breast',1,'',PR),I('egg',2,'',D),I('frozen edamame',100,'g',FR),I('vegetable oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('soy sauce',2,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',3,'',P)],
+   steps:['Dice the chicken into small cubes. Beat the eggs. Crush the garlic and slice the green onions.','Heat 1 tbsp oil in a large skillet on medium-high. Cook the chicken for 5 minutes, stirring, until cooked through (no pink). Move to a plate.','Add the eggs to the pan and stir for 1 minute until scrambled. Move them to the plate.','Add the remaining oil, garlic, cauliflower rice and edamame (no need to thaw). Cook for 5 minutes.','Return the chicken and eggs, add the soy sauce and sesame oil, and toss for 1 minute. Top with green onion.'] },
+ { id:'m11',
+   name:'Greek Chicken & Zucchini Skillet with Feta', time:'10 min prep + 18 min cook',
+   desc:'Golden chicken thighs with zucchini and tomatoes, finished with lemon, oregano and crumbled feta.',
+   ing:[I('boneless chicken thigh',350,'g',PR),I('zucchini',2,'',P),I('cherry tomato',200,'g',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('dried oregano',1,'tsp',PA),I('lemon',1,'',P),I('feta',80,'g',D),I('fresh parsley',10,'g',P),SP],
+   steps:['Cut the chicken into bite-sized pieces and season with salt, pepper and oregano. Slice the zucchini into half-moons and halve the tomatoes.','Heat 1 tbsp oil in a large skillet on medium-high. Cook the chicken for 7 minutes, turning, until cooked through (no pink). Move to a plate.','Add the remaining oil and zucchini and cook for 4 minutes. Add the crushed garlic and tomatoes and cook for 3 minutes.','Return the chicken, add the juice of ½ lemon and crumble the feta over the top.','Add the parsley and serve from the pan.'] },
+ { id:'m12',
+   name:'Pork Tenderloin Medallions with Mushroom Pan Sauce', time:'10 min prep + 15 min cook',
+   desc:'Tender pork medallions in a quick garlicky mushroom sauce, with spinach wilted into the pan.',
+   ing:[I('pork tenderloin',400,'g',PR),I('mushroom',250,'g',P),I('butter',2,'tbsp',D),I('olive oil',1,'tbsp',PA),I('garlic',2,'clove',P),I('dried thyme',1,'tsp',PA),I('chicken stock',100,'ml',PA),I('baby spinach',100,'g',P),SP],
+   steps:['Cut the pork into 2 cm thick slices and season both sides with salt and pepper. Slice the mushrooms.','Heat the oil in a large skillet on medium-high. Cook the pork for 3 minutes per side, until browned and cooked through (145°F / 63°C). Move to a plate.','Melt the butter in the same pan. Cook the mushrooms for 5 minutes. Add the crushed garlic and thyme for 30 seconds.','Pour in the stock and simmer for 2 minutes. Add the spinach until wilted.','Return the pork to the pan for 1 minute and spoon the sauce over it.'] },
+ { id:'m13',
+   name:'Egg Roll in a Bowl (Beef & Cabbage)', time:'10 min prep + 12 min cook',
+   desc:'All the flavour of an egg roll filling without the wrapper: seasoned ground beef, cabbage and carrot with ginger and soy.',
+   ing:[I('lean ground beef',350,'g',PR),I('green cabbage',300,'g',P),I('carrot',1,'',P),I('garlic',3,'clove',P),I('fresh ginger',2,'cm',P),I('soy sauce',3,'tbsp',PA),I('sesame oil',1,'tsp',PA),I('green onion',2,'',P),I('sriracha',1,'tsp',PA)],
+   steps:['Cut the cabbage into thin strips and grate the carrot. Crush the garlic, grate the ginger and slice the green onions.','Cook the beef in a large skillet on medium-high for 6 minutes, breaking it up, until browned and no pink remains (160°F / 71°C).','Add the garlic and ginger for 30 seconds, then the cabbage and carrot. Cook for 5 minutes, stirring, until the cabbage is tender.','Stir in the soy sauce, sesame oil and sriracha.','Top with green onion.'] },
+ { id:'m14',
+   name:'Mozzarella-Basil Chicken Bake', time:'10 min prep + 20 min cook',
+   desc:'Tender chicken baked with sweet tomatoes and melted mozzarella, finished with fresh basil, on a bed of spinach.',
+   ing:[I('chicken breast',2,'',PR),I('cherry tomato',200,'g',P),I('mozzarella',125,'g',D),I('fresh basil',10,'g',P),I('olive oil',2,'tbsp',PA),I('garlic',2,'clove',P),I('baby spinach',80,'g',P),SP],
+   steps:['Heat the oven to 425°F (220°C). Cut each chicken breast in half horizontally and season with salt and pepper.','Put the chicken in a baking dish with the halved tomatoes, crushed garlic and oil. Mix.','Bake for 15 minutes. Tear the mozzarella over the top and bake for 5 more minutes, until the cheese has melted and the chicken is cooked through (no pink, 165°F / 74°C).','Serve on the spinach and top with torn basil.'] },
+];
+
+// ---------- State ----------
+const safeGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+const safeSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const byId = id => RECIPES.find(r => r.id === id);
+
+let weekIds = safeGet('mwp.week') || [];
+if (weekIds.length !== 7 || !weekIds.every(byId)) weekIds = [];
+let favIds = (safeGet('mwp.favs') || []).filter(byId);
+let listShown = false;
+
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// ---------- Rendering ----------
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const UNIT_PLURAL = { clove:'cloves', head:'heads', can:'cans' };
+
+function fmtQty(qty) {
+  if (qty == null) return '';
+  const r = Math.round(qty * 10) / 10;
+  if (r === 0.5) return '½';
+  if (r % 1 === 0.5) return Math.floor(r) + '½';
+  return String(r);
+}
+function fmtIng(i) {
+  if (i.qty == null) return i.name;
+  const q = fmtQty(i.qty), many = i.qty > 1;
+  if (i.unit === '') return `${q} ${i.name}${many && !i.name.endsWith('s') ? 's' : ''}`;
+  if (UNIT_PLURAL[i.unit]) return `${q} ${many ? UNIT_PLURAL[i.unit] : i.unit} ${i.name}`;
+  if (i.unit === 'cm') return `${q} cm ${i.name}`;
+  return `${q} ${i.unit} ${i.name}`;
+}
+
+function cardHTML(r, label, idx) {
+  const isFav = favIds.includes(r.id);
+  return `<article class="card">
+    ${label ? `<div class="day">${label}</div>` : ''}
+    <h2>${esc(r.name)}</h2>
+    <p class="desc">${esc(r.desc)}</p>
+    ${r.fish ? '<span class="time" style="margin-right:6px">🐟 Wild-caught fish</span>' : ''}
+    <span class="time">⏱ ${esc(r.time)}</span>
+    <h3>Ingredients (2 servings)</h3>
+    <ul>${r.ing.map(i => `<li>${esc(fmtIng(i))}</li>`).join('')}</ul>
+    <h3>Method</h3>
+    <ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+    ${r.note ? `<p class="note"><strong>Where to find it:</strong> ${esc(r.note)}</p>` : ''}
+    <div class="actions">
+      ${idx != null ? `<button class="btn ghost small" data-regen="${idx}">↻ Regenerate</button>` : ''}
+      <button class="btn ghost small fav ${isFav ? 'on' : ''}" data-fav="${r.id}">${isFav ? '♥ Saved' : '♡ Save to Favorites'}</button>
+    </div>
+  </article>`;
+}
+
+function renderWeek() {
+  const g = document.getElementById('weekGrid');
+  g.innerHTML = weekIds.length
+    ? weekIds.map((id, i) => cardHTML(byId(id), DAYS[i], i)).join('')
+    : '<div class="empty" style="grid-column:1/-1">Click “Generate Week” to plan your seven dinners.</div>';
+}
+function renderFavs() {
+  document.getElementById('favCount').textContent = favIds.length;
+  document.getElementById('favGrid').innerHTML = favIds.length
+    ? favIds.map(id => cardHTML(byId(id), '', null)).join('')
+    : '<div class="empty" style="grid-column:1/-1">No favorites yet. Save a recipe with the ♡ button and it will show up here.</div>';
+}
+
+function buildList() {
+  const merged = {};
+  weekIds.forEach(id => byId(id).ing.forEach(i => {
+    const k = i.name + '|' + i.unit;
+    if (!merged[k]) merged[k] = { ...i, qty: i.qty == null ? null : 0, count: 0 };
+    if (i.qty != null) merged[k].qty += i.qty;
+    merged[k].count++;
+  }));
+  const cats = {};
+  Object.values(merged).forEach(i => (cats[i.cat] = cats[i.cat] || []).push(i));
+  return cats;
+}
+function renderList() {
+  const body = document.getElementById('listBody');
+  if (!listShown || !weekIds.length) {
+    body.innerHTML = '<div class="empty">Generate a week, then click “Generate Shopping List”.</div>';
+    return;
+  }
+  const cats = buildList();
+  body.innerHTML = [P, D, PR, FR, PA].filter(c => cats[c]).map(c => `
+    <div class="cat"><h2>${c}</h2><ul>
+      ${cats[c].sort((a, b) => a.name.localeCompare(b.name)).map(i => `
+        <li><label><input type="checkbox"> <span>${esc(fmtIng(i))}</span>
+        ${i.count > 1 ? `<span class="n">(${i.count} recipes)</span>` : ''}</label></li>`).join('')}
+    </ul></div>`).join('');
+}
+
+function renderAll() { renderWeek(); renderFavs(); renderList(); }
+
+// ---------- Actions ----------
+function showTab(name) {
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  ['week', 'favs', 'list'].forEach(s => document.getElementById(s).hidden = s !== name);
+}
+
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (b) showTab(b.dataset.tab);
+});
+document.getElementById('genWeek').addEventListener('click', () => {
+  weekIds = shuffle(RECIPES).slice(0, 7).map(r => r.id);
+  safeSet('mwp.week', weekIds);
+  renderAll();
+});
+document.getElementById('genList').addEventListener('click', () => {
+  if (!weekIds.length) { alert('Generate a week first.'); return; }
+  listShown = true; renderList(); showTab('list');
+});
+document.addEventListener('click', e => {
+  const rg = e.target.closest('[data-regen]');
+  if (rg) {
+    const i = +rg.dataset.regen;
+    let pool = RECIPES.filter(r => !weekIds.includes(r.id));
+    if (!pool.length) pool = RECIPES.filter(r => r.id !== weekIds[i]);
+    weekIds[i] = pool[Math.floor(Math.random() * pool.length)].id;
+    safeSet('mwp.week', weekIds);
+    renderAll();
+    return;
+  }
+  const fv = e.target.closest('[data-fav]');
+  if (fv) {
+    const id = fv.dataset.fav;
+    favIds = favIds.includes(id) ? favIds.filter(f => f !== id) : [...favIds, id];
+    safeSet('mwp.favs', favIds);
+    renderAll();
+  }
+});
+
+renderAll();
+</script>
+</body>
+</html>
