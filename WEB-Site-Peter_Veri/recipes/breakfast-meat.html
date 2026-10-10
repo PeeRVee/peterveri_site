@@ -62,6 +62,14 @@
   .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
   .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
   .card.hide { display:none; }
+  .actions { flex-wrap:wrap; }
+  @media print {
+    body.print-one header, body.print-one nav, body.print-one .toolbar, body.print-one .filters, body.print-one .key { display:none; }
+    body.print-one .card:not(.printing) { display:none; }
+    body.print-one .grid { display:block; }
+    .card { box-shadow:none; break-inside:avoid; }
+    .actions, [data-print] { display:none !important; }
+  }
   @media (max-width: 480px) { header, main { padding-left:12px; padding-right:12px; } h1 { font-size:1.6rem; } .card { padding:16px; } }
   @media print { .filters { display:none; } }
 </style>
@@ -86,6 +94,7 @@
 <h3>Method</h3>
 <ol><li>Cut the bacon into short pieces. Cook in a cold skillet over medium heat for 6–8 minutes, until crisp. Pour off all but 1 tbsp of the fat.</li><li>Beat the eggs with black pepper. Pour them into the pan.</li><li>Stir gently for 2–3 minutes, until just set.</li><li>Scatter with the cheddar and green onion and cover for 30 seconds to melt the cheese.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Canadian Back Bacon Egg Cups</h2>
@@ -97,6 +106,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 375°F (190°C).</li><li>Press a slice of back bacon into each cup of a 6-cup muffin tin to make a little bowl.</li><li>Crack an egg into each cup. Season with black pepper.</li><li>Bake for 12–15 minutes, until the whites are set. Add the cheddar for the last 2 minutes.</li><li>Top with green onion. Cool and store in the fridge for up to 3 days.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Sausage, Pepper &amp; Egg Scramble</h2>
@@ -108,6 +118,7 @@
 <h3>Method</h3>
 <ol><li>Slice the sausages into coins. Heat the oil in a skillet on medium-high and cook the sausage for 5 minutes, until browned.</li><li>Add the pepper and cook for 3 minutes.</li><li>Beat the eggs with salt and pepper. Pour them in and stir gently for 2–3 minutes.</li><li>Make sure the sausage is cooked through (no pink). Top with green onion.</li></ol>
 <p class="note"><strong>Note:</strong> Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Sheet-Pan Bacon, Eggs &amp; Tomatoes</h2>
@@ -119,6 +130,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 400°F (200°C). Line a baking sheet with foil.</li><li>Lay the bacon on one side of the sheet and put the tomatoes on the other. Bake for 8 minutes.</li><li>Make 4 gaps for the eggs and crack one into each. Bake for 5–7 minutes, until the whites are set.</li><li>Serve on the spinach with black pepper.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Ham &amp; Cheese Omelet</h2>
@@ -130,6 +142,7 @@
 <h3>Method</h3>
 <ol><li>Beat the eggs with black pepper.</li><li>Melt the butter in a non-stick skillet on medium-high. Pour in the eggs and stir gently for 30 seconds.</li><li>Leave for 1–2 minutes until nearly set. Add the ham and cheddar to one half.</li><li>Fold the other half over, slide onto a plate and top with chives.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Sausage &amp; Spinach Frittata</h2>
@@ -141,6 +154,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 400°F (200°C). Slice the sausages into coins.</li><li>Heat the oil in an oven-safe skillet on medium-high. Cook the sausage for 5 minutes, until browned. Add the spinach until wilted.</li><li>Beat the eggs with salt and pepper. Pour over the sausage and scatter with the cheese.</li><li>Cook for 2 minutes, then put in the oven for 8–10 minutes, until set in the middle.</li><li>Make sure the sausage is cooked through. Cut into wedges.</li></ol>
 <p class="note"><strong>Note:</strong> Choose sausage made only from meat, fat and spices, with no blood, offal or other by-products. Read the label or ask the butcher counter.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Back Bacon &amp; Mushroom Cauliflower Hash</h2>
@@ -152,6 +166,7 @@
 <h3>Method</h3>
 <ol><li>Heat half the oil in a skillet on medium-high. Cook the cauliflower and mushrooms for 6 minutes, stirring now and then, until browned.</li><li>Add the bacon and paprika and cook for 3 minutes. Season, then move to a plate.</li><li>Add the remaining oil to the pan and fry the egg for 3 minutes.</li><li>Put the egg on the hash.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Homemade Sage Pork Sausage Patties with Eggs &amp; Spinach</h2>
@@ -163,10 +178,23 @@
 <h3>Method</h3>
 <ol><li>Mix the pork with the sage, thyme, paprika, salt and pepper. Shape into 4 small patties, about 1.5 cm thick.</li><li>Heat half the oil in a skillet on medium. Cook the patties for 4–5 minutes per side, until browned and cooked through (no pink, 160°F / 71°C). Move to a plate.</li><li>Add the remaining oil and fry the eggs for 3 minutes.</li><li>Wilt the spinach in the same pan for 1 minute. Serve with the patties and eggs.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 </div>
 
 </main>
 <p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+<script>
+(function(){
+  function done(){ document.body.classList.remove('print-one'); document.querySelectorAll('.card.printing').forEach(function(c){ c.classList.remove('printing'); }); }
+  window.addEventListener('afterprint', done);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-print]'); if (!b) return;
+    var c = b.closest('.card'); if (!c) return;
+    done(); c.classList.add('printing'); document.body.classList.add('print-one');
+    window.print(); setTimeout(done, 1000);
+  });
+})();
+</script>
 </body>
 </html>

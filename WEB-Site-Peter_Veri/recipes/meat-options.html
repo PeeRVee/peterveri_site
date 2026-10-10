@@ -61,6 +61,14 @@
   .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
   .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
   .card.hide { display:none; }
+  .actions { flex-wrap:wrap; }
+  @media print {
+    body.print-one header, body.print-one nav, body.print-one .toolbar, body.print-one .filters, body.print-one .key { display:none; }
+    body.print-one .card:not(.printing) { display:none; }
+    body.print-one .grid { display:block; }
+    .card { box-shadow:none; break-inside:avoid; }
+    .actions, [data-print] { display:none !important; }
+  }
   @media print { nav, .toolbar, .actions { display:none; } }
 </style>
 </head>
@@ -222,6 +230,7 @@ function cardHTML(r, label, idx) {
     <div class="actions">
       ${idx != null ? `<button class="btn ghost small" data-regen="${idx}">↻ Regenerate</button>` : ''}
       <button class="btn ghost small fav ${isFav ? 'on' : ''}" data-fav="${r.id}">${isFav ? '♥ Saved' : '♡ Save to Favorites'}</button>
+      <button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button>
     </div>
   </article>`;
 }
@@ -307,6 +316,18 @@ document.addEventListener('click', e => {
 });
 
 renderAll();
+</script>
+<script>
+(function(){
+  function done(){ document.body.classList.remove('print-one'); document.querySelectorAll('.card.printing').forEach(function(c){ c.classList.remove('printing'); }); }
+  window.addEventListener('afterprint', done);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-print]'); if (!b) return;
+    var c = b.closest('.card'); if (!c) return;
+    done(); c.classList.add('printing'); document.body.classList.add('print-one');
+    window.print(); setTimeout(done, 1000);
+  });
+})();
 </script>
 </body>
 </html>

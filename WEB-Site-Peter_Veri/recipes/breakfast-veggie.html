@@ -62,6 +62,14 @@
   .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
   .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
   .card.hide { display:none; }
+  .actions { flex-wrap:wrap; }
+  @media print {
+    body.print-one header, body.print-one nav, body.print-one .toolbar, body.print-one .filters, body.print-one .key { display:none; }
+    body.print-one .card:not(.printing) { display:none; }
+    body.print-one .grid { display:block; }
+    .card { box-shadow:none; break-inside:avoid; }
+    .actions, [data-print] { display:none !important; }
+  }
   @media (max-width: 480px) { header, main { padding-left:12px; padding-right:12px; } h1 { font-size:1.6rem; } .card { padding:16px; } }
   @media print { .filters { display:none; } }
 </style>
@@ -86,6 +94,7 @@
 <h3>Method</h3>
 <ol><li>Beat the eggs with a pinch of salt and pepper. Halve the tomatoes.</li><li>Melt the butter in a non-stick skillet on medium heat. Add the spinach and stir for 30 seconds, until wilted.</li><li>Pour in the eggs. Stir gently for 2–3 minutes, until just set but still soft.</li><li>Crumble the feta on top and add the tomatoes.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Cheddar &amp; Chive Omelet with Mushrooms</h2>
@@ -97,6 +106,7 @@
 <h3>Method</h3>
 <ol><li>Slice the mushrooms. Melt half the butter in a non-stick skillet on medium-high and cook the mushrooms for 4 minutes. Tip onto a plate.</li><li>Beat the eggs with salt and pepper. Wipe the pan, melt the remaining butter and pour in the eggs.</li><li>Stir gently for 30 seconds, then leave for 1–2 minutes until nearly set.</li><li>Add the mushrooms, cheddar and chives to one half. Fold the other half over and slide onto a plate.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Greek Yogurt Bowl with Berries &amp; Walnuts</h2>
@@ -108,6 +118,7 @@
 <h3>Method</h3>
 <ol><li>Spoon the yogurt into a bowl.</li><li>Top with the berries and walnuts.</li><li>Sprinkle with the cinnamon.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Baked Eggs in Spiced Tomato Sauce</h2>
@@ -119,6 +130,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oil in a small skillet on medium. Add the crushed garlic and paprika and stir for 30 seconds.</li><li>Add the tomatoes with salt and pepper and simmer for 6 minutes until thicker.</li><li>Make 2 dips in the sauce and crack an egg into each. Cover and cook for 4–5 minutes, until the whites are set.</li><li>Crumble the feta on top and add the parsley.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Zucchini &amp; Cheddar Egg Muffins</h2>
@@ -130,6 +142,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 375°F (190°C). Lightly oil a 6-cup muffin tin.</li><li>Squeeze the grated zucchini in a paper towel to remove the water.</li><li>Beat the eggs with salt and pepper. Stir in the zucchini, cheddar and green onions.</li><li>Divide the mixture between the 6 cups. Bake for 18–20 minutes, until set and lightly golden.</li><li>Cool, then store in the fridge. Reheat in the microwave for 45–60 seconds.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Tofu Scramble with Peppers &amp; Spinach</h2>
@@ -141,6 +154,7 @@
 <h3>Method</h3>
 <ol><li>Drain the tofu and pat it dry. Crumble it into small pieces with your hands.</li><li>Heat the oil in a large skillet on medium-high. Cook the pepper for 3 minutes.</li><li>Add the tofu, turmeric, cumin, salt and pepper. Cook for 5 minutes, stirring, until hot and lightly golden.</li><li>Add the spinach and stir until wilted. Top with green onion.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Veggie Frittata (for Two Days)</h2>
@@ -152,6 +166,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 400°F (200°C). Beat the eggs with salt and pepper.</li><li>Heat the oil in an oven-safe skillet on medium-high. Cook the pepper and mushrooms for 5 minutes. Add the spinach until wilted.</li><li>Pour the eggs over the vegetables and scatter with the cheese. Cook for 2 minutes without stirring, until the edges start to set.</li><li>Put the skillet in the oven for 8–10 minutes, until the middle is set. Carefully remove it (the handle will be hot).</li><li>Cut into wedges. Store leftovers in the fridge and reheat for 1 minute.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Soft-Boiled Eggs with Garlic Asparagus</h2>
@@ -163,6 +178,7 @@
 <h3>Method</h3>
 <ol><li>Bring a small pot of water to a boil. Lower in the eggs gently and cook for 6½ minutes. Move them to a bowl of cold water.</li><li>Snap the tough ends off the asparagus.</li><li>Melt the butter in a skillet on medium-high. Cook the asparagus for 4–5 minutes. Add the crushed garlic for the last minute. Season.</li><li>Peel the eggs, cut them open, and dip the asparagus into the yolks.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card">
 <h2>Overnight Steel-Cut Oats (Bonus)</h2>
@@ -174,10 +190,23 @@
 <h3>Method</h3>
 <ol><li>In a jar, stir together the oats, milk, yogurt, cinnamon and salt.</li><li>Cover and put in the fridge overnight, for 8–12 hours.</li><li>In the morning, stir. Steel-cut oats stay chewy when eaten cold, so for a softer, warm bowl, microwave for 1½–2 minutes, adding a splash of milk if it is thick.</li><li>Top with the walnuts and berries.</li></ol>
 <p class="note"><strong>Note:</strong> Higher in carbs: pair it with protein, and check with your care team how much oats suit you.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 </div>
 
 </main>
 <p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+<script>
+(function(){
+  function done(){ document.body.classList.remove('print-one'); document.querySelectorAll('.card.printing').forEach(function(c){ c.classList.remove('printing'); }); }
+  window.addEventListener('afterprint', done);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-print]'); if (!b) return;
+    var c = b.closest('.card'); if (!c) return;
+    done(); c.classList.add('printing'); document.body.classList.add('print-one');
+    window.print(); setTimeout(done, 1000);
+  });
+})();
+</script>
 </body>
 </html>

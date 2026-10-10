@@ -62,6 +62,14 @@
   .key { font-size:.875rem; color:var(--muted); margin:0 0 16px; }
   .card .note { font-size:.8125rem; color:var(--muted); margin:14px 0 0; }
   .card.hide { display:none; }
+  .actions { flex-wrap:wrap; }
+  @media print {
+    body.print-one header, body.print-one nav, body.print-one .toolbar, body.print-one .filters, body.print-one .key { display:none; }
+    body.print-one .card:not(.printing) { display:none; }
+    body.print-one .grid { display:block; }
+    .card { box-shadow:none; break-inside:avoid; }
+    .actions, [data-print] { display:none !important; }
+  }
   @media (max-width: 480px) { header, main { padding-left:12px; padding-right:12px; } h1 { font-size:1.6rem; } .card { padding:16px; } }
   @media print { .filters { display:none; } }
 </style>
@@ -89,6 +97,7 @@
 <h3>Method</h3>
 <ol><li>Whisk the cocoa, xylitol, vanilla and salt into the yogurt until smooth.</li><li>Taste and add more xylitol if you like.</li><li>Spoon into two small glasses. Chill for 30 minutes.</li><li>Top with a few raspberries.</li></ol>
 <p class="note"><strong>Note:</strong> Xylitol is toxic to dogs. Keep it, and anything made with it, away from pets.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="df gf">
 <h2>Lemon Cheesecake Mousse</h2>
@@ -100,6 +109,7 @@
 <h3>Method</h3>
 <ol><li>Beat the cream cheese with a fork or whisk until smooth.</li><li>Mix in the yogurt, lemon zest, 2 tbsp lemon juice, xylitol and vanilla.</li><li>Taste and adjust the lemon and xylitol.</li><li>Divide between 3 small glasses. Chill for at least 1 hour.</li></ol>
 <p class="note"><strong>Note:</strong> Xylitol is toxic to dogs. Keep it, and anything made with it, away from pets.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="df gf">
 <h2>Flourless Peanut Butter Cookies</h2>
@@ -111,6 +121,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 350°F (175°C). Line a baking sheet with parchment paper.</li><li>Mix the peanut butter, egg, xylitol and salt until smooth.</li><li>Scoop 8 balls onto the sheet and press each with a fork in a criss-cross pattern.</li><li>Bake for 10–12 minutes, until set at the edges. Cool on the sheet for 10 minutes, as they firm up.</li></ol>
 <p class="note"><strong>Note:</strong> Contains peanuts. Xylitol is toxic to dogs. Keep it, and anything made with it, away from pets.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="df gf">
 <h2>Frozen Berry Yogurt Bark</h2>
@@ -122,6 +133,7 @@
 <h3>Method</h3>
 <ol><li>Line a small baking sheet with parchment paper.</li><li>Mix the yogurt with the xylitol and vanilla. Spread it about 1 cm thick on the paper.</li><li>Scatter with the berries and walnuts, pressing them in lightly.</li><li>Freeze for 2 hours, until solid. Break into pieces and store in the freezer.</li></ol>
 <p class="note"><strong>Note:</strong> Xylitol is toxic to dogs. Keep it, and anything made with it, away from pets.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="gf">
 <h2>Easy Flourless Brownies</h2>
@@ -133,6 +145,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 350°F (175°C). Line an 8-inch square pan with parchment paper.</li><li>Melt the chocolate and butter together in the microwave in 30-second bursts, stirring in between, until smooth.</li><li>Stir in the sugar, then the eggs one at a time, then the vanilla, cocoa and salt.</li><li>Pour into the pan. Bake for 18–20 minutes, until a toothpick comes out with a few moist crumbs.</li><li>Cool completely before cutting.</li></ol>
 <p class="note"><strong>Note:</strong> Check that the chocolate, cocoa and vanilla are labelled gluten-free.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="gf">
 <h2>Coconut Macaroons</h2>
@@ -144,6 +157,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 325°F (160°C). Line a baking sheet with parchment paper.</li><li>Whisk the egg whites with the sugar, vanilla and salt until foamy. Stir in the coconut.</li><li>Scoop 12 mounds onto the sheet with a spoon, pressing them together.</li><li>Bake for 14–16 minutes, until golden at the edges. Cool on the sheet.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="gf">
 <h2>Cinnamon Baked Apples</h2>
@@ -155,6 +169,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 375°F (190°C). Core the apples and cut them into thick wedges.</li><li>Put them in a baking dish with the butter in small pieces, walnuts, cinnamon and maple syrup. Add a splash of water.</li><li>Bake for 18–20 minutes, stirring once, until soft.</li><li>Serve warm.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="gf">
 <h2>Chocolate Banana Ice Cream</h2>
@@ -166,6 +181,7 @@
 <h3>Method</h3>
 <ol><li>Slice the bananas and freeze them on a tray for at least 2 hours.</li><li>Blend the frozen slices with the cocoa until creamy, scraping down the sides. Add a splash of milk if it is too thick.</li><li>Serve right away, or freeze for 30 minutes for a firmer texture.</li></ol>
 <p class="note"><strong>Note:</strong> Bananas have natural sugar, so this one is not labelled diabetic-friendly.</p>
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="reg">
 <h2>Easy Apple Crisp</h2>
@@ -177,6 +193,7 @@
 <h3>Method</h3>
 <ol><li>Heat the oven to 350°F (175°C). Toss the apples with the cinnamon and lemon juice in a baking dish.</li><li>In a bowl, rub the oats, flour, sugar and butter together with your fingers until crumbly.</li><li>Scatter the crumble over the apples.</li><li>Bake for 30 minutes, until golden and bubbling.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 <article class="card" data-tags="reg">
 <h2>5-Minute Chocolate Mug Cake</h2>
@@ -188,6 +205,7 @@
 <h3>Method</h3>
 <ol><li>In a large mug, mix the flour, sugar, cocoa, baking powder and salt.</li><li>Stir in the milk and oil until smooth.</li><li>Microwave on high for 70–90 seconds, until risen and set. Careful: the mug will be hot.</li><li>Let it cool for 1 minute before eating.</li></ol>
 
+<div class="actions"><button class="btn ghost small" data-print="1">🖨 Print / Save as PDF</button></div>
 </article>
 </div>
 <script>
@@ -197,5 +215,17 @@ document.querySelectorAll('.card').forEach(function(c){var t=(c.dataset.tags||''
 </script>
 </main>
 <p class="disclaimer"><strong>Please read:</strong> These recipes may contain ingredients that can cause severe allergic reactions. Please read every ingredient and label carefully to make sure each one is safe for YOU before making any of these recipes. These recipes are provided as-is, with no warranty of any kind. They are general ideas, not medical or dietary advice.</p>
+<script>
+(function(){
+  function done(){ document.body.classList.remove('print-one'); document.querySelectorAll('.card.printing').forEach(function(c){ c.classList.remove('printing'); }); }
+  window.addEventListener('afterprint', done);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-print]'); if (!b) return;
+    var c = b.closest('.card'); if (!c) return;
+    done(); c.classList.add('printing'); document.body.classList.add('print-one');
+    window.print(); setTimeout(done, 1000);
+  });
+})();
+</script>
 </body>
 </html>
